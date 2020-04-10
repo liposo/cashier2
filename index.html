@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cashier V2</title>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+  <main class="container">
+    <section id="cashierPaymentForm" class="from-section ">
+
+      <div id="selectedMethod" class="method-container">
+        <div class="form-logo">
+          <img src="img/bigwallet.svg">
+          <small>10 EUR - EUR</small>
+        </div>
+        <form id="cashierForm" class="form-wrapper">
+          <div class="input-container">
+            <label for="card.number" class="input-label">Card number</label>
+            <input id="card.number" name="card.number" class="text-input has-error" type="text" placeholder="Card Number" />
+            <div class="error">Invalid Card</div>
+          </div>
+          
+          <div class="input-container">
+            <label for="card.holder" class="input-label">Card holder name</label>
+            <input id="card.holder" name="card.holder" class="text-input has-error" type="text" placeholder="Holder Name" />
+            <div class="error">Invalid Holder</div>
+          </div>
+
+          <div class="date-cvv">
+            <div class="small-input-wapper">
+              <label for="card.expiryMonth" class="input-label">Exp/Month</label>
+              <input id="card.expiryMonth" class="text-input has-error" name="card.expiryMonth" type="text"
+                placeholder="EXP/MM" />  
+            </div>
+            <div class="small-input-wapper">
+              <label for="card.expiryYear" class="input-label">Exp/Year</label>
+              <input id="card.expiryYear" class="text-input has-error" name="card.expiryYear" type="text" placeholder="EXP/YY" />
+            </div>
+            <div class="small-input-wapper">
+              <label for="card.cvv" class="input-label">CVV2/CVC</label>
+              <input id="card.cvv" class="text-input has-error" name="card.cvv" type="text" placeholder="CVV2/CVC" />
+            </div>
+          </div>
+          <div class="error">Expired Card</div>
+          <div class="save-card-container">
+            <input type="checkbox" id="saveCard" />
+            <label for="saveCard">Save Card</label>
+          </div>
+        </form>
+      </div>
+
+    </section>
+    <section id="methodsContainer" class="flex-container">
+      <div id="method1" class="card" data-method="CREDITCARD" data-selected="true" data-amount=""
+        data-predefinedamounts="20:30:40" data-defaultamount="10" data-currency="EUR" data-customPaymentMethod=""
+        data-errors="" data-customField="fullCard" data-logo="img/bigwallet.svg">
+        <img src="img/bigwallet.svg">
+        <p>Credit Card</p>
+      </div>
+      <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
+        data-currency="EUR" data-customPaymentMethod="CREDTICARD-2" data-errors="" data-customField="cardPan">
+        <img src="img/bigwallet.svg">
+        <p>Custom card Method</p>
+      </div>
+      </div>
+      <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
+        data-currency="EUR" data-customPaymentMethod="MOBILEPAY" data-errors="" data-customField="accountId">
+        <img src="img/bigwallet.svg">
+        <p>Custom Mobile</p>
+      </div>
+      <div id="method2" class="card" data-amount="" data-method="ANOTHERMETHOD" data-predefinedamounts="20:30:40"
+        data-defaultamount="10" data-currency="EUR" data-customPaymentMethod="" data-errors="" data-customField="">
+        <img src="img/bigwallet.svg">
+        <p>Regular</p>
+      </div>
+      <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
+        data-currency="EUR" data-customPaymentMethod="CREDTICARD-3" data-errors="1" data-customField="fullCard">
+        <img src="img/bigwallet.svg">
+        <p>Custom card - error</p>
+      </div>
+      <div id="method5" class="card">
+        <img src="img/bigwallet.svg">
+        <p>Method 5</p>
+      </div>
+      <div id="method6" class="card">
+        <img src="img/bigwallet.svg">
+        <p>Method 6</p>
+      </div>
+      <div id="method7" class="card">
+        <img src="img/bigwallet.svg">
+        <p>Method 7</p>
+      </div>
+      <div id="method8" class="card">
+        <img src="img/bigwallet.svg">
+        <p>Method 8</p>
+      </div>
+      <div id="method9" class="card">
+        <img src="img/bigwallet.svg">
+        <p>Method 9</p>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>
