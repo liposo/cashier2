@@ -19,43 +19,85 @@
           <img src="img/bigwallet.svg">
           <small>10 EUR - EUR</small>
         </div>
-        <form id="cashierForm" class="form-wrapper">
-          <div class="input-container">
-            <label for="card.number" class="input-label">Card number</label>
-            <input id="card.number" name="card.number" class="text-input has-error" type="text" placeholder="Card Number" />
-            <div class="error">Invalid Card</div>
-          </div>
+        <div id="cashierForm" class="form-wrapper">
           
-          <div class="input-container">
-            <label for="card.holder" class="input-label">Card holder name</label>
-            <input id="card.holder" name="card.holder" class="text-input has-error" type="text" placeholder="Holder Name" />
-            <div class="error">Invalid Holder</div>
-          </div>
+          <!-- [BEGIN] AMOUNT FORM SECTION -->
+          <div class="amount-container">
+            <div class="predefined-amount-row">
+              <span>Amount: </span>
+              <label class="radio-container">100
+                <input id="amount100" name="amount" type="radio" value="100" checked="checked">
+                <span class="checkmark"></span>
+              </label>
+              <label class="radio-container">1 000
+                <input id="amount1000" name="amount" type="radio" value="100">
+                <span class="checkmark"></span>
+              </label>
+              <label class="radio-container">2 000
+                <input id="amount2000" name="amount" type="radio" value="100">
+                <span class="checkmark"></span>
+              </label>
+            </div>
 
-          <div class="date-cvv">
-            <div class="small-input-wapper">
-              <label for="card.expiryMonth" class="input-label">Exp/Month</label>
-              <input id="card.expiryMonth" class="text-input has-error" name="card.expiryMonth" type="text"
-                placeholder="EXP/MM" />  
+            <div class="manual-amount-row">
+              <label class="radio-container radio-container-manual-amount">
+                <input id="manualAmountRadio" name="amount" type="radio" value="">
+                <span class="checkmark"></span>
+              </label>
+              <div class="manual-amount">
+                <input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount"/>
+                <div class="">Small text under the amount input</div>      
+              </div>  
             </div>
-            <div class="small-input-wapper">
-              <label for="card.expiryYear" class="input-label">Exp/Year</label>
-              <input id="card.expiryYear" class="text-input has-error" name="card.expiryYear" type="text" placeholder="EXP/YY" />
+            <div class="error">Amount out of range</div>
+          </div>
+          <!-- [END] AMOUNT FORM SECTION -->
+
+          <!-- [BEGIN] FULL CARD DATA FORM SECTION   -->
+          <div class="full-card">
+            <div class="input-container">
+              <label for="card.number" class="input-label">Card number</label>
+              <input id="card.number" name="card.number" class="text-input has-error" type="text"
+                placeholder="Card Number" />
+              <div class="error">Invalid Card</div>
             </div>
-            <div class="small-input-wapper">
-              <label for="card.cvv" class="input-label">CVV2/CVC</label>
-              <input id="card.cvv" class="text-input has-error" name="card.cvv" type="text" placeholder="CVV2/CVC" />
+
+            <div class="input-container">
+              <label for="card.holder" class="input-label">Card holder name</label>
+              <input id="card.holder" name="card.holder" class="text-input has-error" type="text"
+                placeholder="Holder Name" />
+              <div class="error">Invalid Holder</div>
+            </div>
+
+            <div class="date-cvv">
+              <div class="small-input-wapper">
+                <label for="card.expiryMonth" class="input-label">Exp/Month</label>
+                <input id="card.expiryMonth" class="text-input has-error" name="card.expiryMonth" type="text"
+                  placeholder="EXP/MM" />
+              </div>
+              <div class="small-input-wapper">
+                <label for="card.expiryYear" class="input-label">Exp/Year</label>
+                <input id="card.expiryYear" class="text-input has-error" name="card.expiryYear" type="text"
+                  placeholder="EXP/YY" />
+              </div>
+              <div class="small-input-wapper">
+                <label for="card.cvv" class="input-label">CVV2/CVC</label>
+                <input id="card.cvv" class="text-input has-error" name="card.cvv" type="text" placeholder="CVV2/CVC" />
+              </div>
+            </div>
+            <div class="error">Expired Card</div>
+            <div class="save-card-container">
+              <input type="checkbox" id="saveCard" />
+              <label for="saveCard">Save Card</label>
             </div>
           </div>
-          <div class="error">Expired Card</div>
-          <div class="save-card-container">
-            <input type="checkbox" id="saveCard" />
-            <label for="saveCard">Save Card</label>
-          </div>
-        </form>
+          <!-- [END] FULL CARD DATA FORM SECTION   -->
+          </form>
+        </div>
       </div>
-
     </section>
+
+    <!-- [BEGIN] PAYMENT METHODS GRID   -->
     <section id="methodsContainer" class="flex-container">
       <div id="method1" class="card" data-method="CREDITCARD" data-selected="true" data-amount=""
         data-predefinedamounts="20:30:40" data-defaultamount="10" data-currency="EUR" data-customPaymentMethod=""
@@ -105,6 +147,7 @@
         <p>Method 9</p>
       </div>
     </section>
+    <!-- [END] PAYMENT METHODS GRID   -->
   </main>
 </body>
 
