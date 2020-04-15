@@ -15,83 +15,92 @@
     <section id="cashierPaymentForm" class="from-section ">
 
       <div id="selectedMethod" class="method-container">
-        <div class="form-logo">
-          <img src="img/bigwallet.svg">
-          <small>10 EUR - EUR</small>
-        </div>
         <div id="cashierForm" class="form-wrapper">
-          
-          <!-- [BEGIN] AMOUNT FORM SECTION -->
-          <div class="amount-container">
-            <div class="predefined-amount-row">
-              <span>Amount: </span>
-              <label class="radio-container">100
-                <input id="amount100" name="amount" type="radio" value="100" checked="checked">
-                <span class="checkmark"></span>
-              </label>
-              <label class="radio-container">1 000
-                <input id="amount1000" name="amount" type="radio" value="100">
-                <span class="checkmark"></span>
-              </label>
-              <label class="radio-container">2 000
-                <input id="amount2000" name="amount" type="radio" value="100">
-                <span class="checkmark"></span>
-              </label>
+          <!-- [BEGIN] LOGO AND AMOUNT ROW -->
+          <div class="logo-amount-row">
+            <div class="form-logo">
+              <img src="img/bigwallet.svg">
+              <small>10 EUR - EUR</small>
             </div>
+            <!-- [BEGIN] AMOUNT FORM SECTION -->
+            <div class="amount-container">
+              <div class="predefined-amount-row">
+                <span>Amount: </span>
+                <label class="radio-container">100
+                  <input id="amount100" name="amount" type="radio" value="100" checked="checked">
+                  <span class="checkmark"></span>
+                </label>
+                <label class="radio-container">1 000
+                  <input id="amount1000" name="amount" type="radio" value="100">
+                  <span class="checkmark"></span>
+                </label>
+                <label class="radio-container">2 000
+                  <input id="amount2000" name="amount" type="radio" value="100">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
 
-            <div class="manual-amount-row">
-              <label class="radio-container radio-container-manual-amount">
-                <input id="manualAmountRadio" name="amount" type="radio" value="">
-                <span class="checkmark"></span>
-              </label>
-              <div class="manual-amount">
-                <input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount"/>
-                <div class="">Small text under the amount input</div>      
-              </div>  
+              <div class="manual-amount-row">
+                <label class="radio-container radio-container-manual-amount">
+                  <input id="manualAmountRadio" name="amount" type="radio" value="">
+                  <span class="checkmark"></span>
+                </label>
+                <div class="manual-amount">
+                  <input class="text-input has-error" name="amount" id="manualAmountInput" type="text"
+                    placeholder="Amount" />
+                  <div class="">Small text under the amount input</div>
+                </div>
+              </div>
+              <div class="error">Amount out of range</div>
             </div>
-            <div class="error">Amount out of range</div>
+            <!-- [END] AMOUNT FORM SECTION -->
           </div>
-          <!-- [END] AMOUNT FORM SECTION -->
+          <!-- [END] LOGO AND AMOUNT ROW -->
 
-          <!-- [BEGIN] FULL CARD DATA FORM SECTION   -->
-          <div class="full-card">
-            <div class="input-container">
-              <label for="card.number" class="input-label">Card number</label>
-              <input id="card.number" name="card.number" class="text-input has-error" type="text"
-                placeholder="Card Number" />
-              <div class="error">Invalid Card</div>
-            </div>
+          <!-- [BEGIN] PAYMENT DATA ROW -->
+          <div class="payment-data-row">
+            <!-- [BEGIN] FULL CARD DATA FORM SECTION   -->
+            <div class="payment-data-fields-container">
+              <div class="input-container">
+                <label for="card.number" class="input-label">Card number</label>
+                <input id="card.number" name="card.number" class="text-input has-error" type="text"
+                  placeholder="Card Number" />
+                <div class="error">Invalid Card</div>
+              </div>
 
-            <div class="input-container">
-              <label for="card.holder" class="input-label">Card holder name</label>
-              <input id="card.holder" name="card.holder" class="text-input has-error" type="text"
-                placeholder="Holder Name" />
-              <div class="error">Invalid Holder</div>
-            </div>
+              <div class="input-container">
+                <label for="card.holder" class="input-label">Card holder name</label>
+                <input id="card.holder" name="card.holder" class="text-input has-error" type="text"
+                  placeholder="Holder Name" />
+                <div class="error">Invalid Holder</div>
+              </div>
 
-            <div class="date-cvv">
-              <div class="small-input-wapper">
-                <label for="card.expiryMonth" class="input-label">Exp/Month</label>
-                <input id="card.expiryMonth" class="text-input has-error" name="card.expiryMonth" type="text"
-                  placeholder="EXP/MM" />
+              <div class="date-cvv">
+                <div class="small-input-wapper">
+                  <label for="card.expiryMonth" class="input-label">Exp/Month</label>
+                  <input id="card.expiryMonth" class="text-input has-error" name="card.expiryMonth" type="text"
+                    placeholder="EXP/MM" />
+                </div>
+                <div class="small-input-wapper">
+                  <label for="card.expiryYear" class="input-label">Exp/Year</label>
+                  <input id="card.expiryYear" class="text-input has-error" name="card.expiryYear" type="text"
+                    placeholder="EXP/YY" />
+                </div>
+                <div class="small-input-wapper">
+                  <label for="card.cvv" class="input-label">CVV2/CVC</label>
+                  <input id="card.cvv" class="text-input has-error" name="card.cvv" type="text"
+                    placeholder="CVV2/CVC" />
+                </div>
               </div>
-              <div class="small-input-wapper">
-                <label for="card.expiryYear" class="input-label">Exp/Year</label>
-                <input id="card.expiryYear" class="text-input has-error" name="card.expiryYear" type="text"
-                  placeholder="EXP/YY" />
-              </div>
-              <div class="small-input-wapper">
-                <label for="card.cvv" class="input-label">CVV2/CVC</label>
-                <input id="card.cvv" class="text-input has-error" name="card.cvv" type="text" placeholder="CVV2/CVC" />
+              <div class="error">Expired Card</div>
+              <div class="save-card-container">
+                <input type="checkbox" id="saveCard" />
+                <label for="saveCard">Save Card</label>
               </div>
             </div>
-            <div class="error">Expired Card</div>
-            <div class="save-card-container">
-              <input type="checkbox" id="saveCard" />
-              <label for="saveCard">Save Card</label>
-            </div>
+            <!-- [END] FULL CARD DATA FORM SECTION   -->
           </div>
-          <!-- [END] FULL CARD DATA FORM SECTION   -->
+          <!-- [END] PAYMENT DATA ROW -->
           </form>
         </div>
       </div>
