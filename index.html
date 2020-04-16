@@ -14,186 +14,35 @@
   <main class="container">
     <section id="cashierPaymentForm" class="from-section ">
 
-      <div id="selectedMethod" class="method-container">
-        <div id="cashierForm" class="form-wrapper">
-          <!-- [BEGIN] LOGO AND AMOUNT ROW -->
-          <div class="logo-amount-row">
-            <div class="form-logo">
-              <img src="img/bigwallet.svg">
-              <small>10 EUR - EUR</small>
-            </div>
-            <!-- [BEGIN] AMOUNT FORM SECTION -->
-            <div class="amount-container">
-              <div class="predefined-amount-row">
-                <span>Amount: </span>
-                <label class="radio-container">100
-                  <input id="amount100" name="amount" type="radio" value="100" checked="checked">
-                  <span class="checkmark"></span>
-                </label>
-                <label class="radio-container">1 000
-                  <input id="amount1000" name="amount" type="radio" value="100">
-                  <span class="checkmark"></span>
-                </label>
-                <label class="radio-container">2 000
-                  <input id="amount2000" name="amount" type="radio" value="100">
-                  <span class="checkmark"></span>
-                </label>
-              </div>
 
-              <div class="manual-amount-row">
-                <label class="radio-container radio-container-manual-amount">
-                  <input id="manualAmountRadio" name="amount" type="radio" value="">
-                  <span class="checkmark"></span>
-                </label>
-                <div class="manual-amount">
-                  <input class="text-input has-error" name="amount" id="manualAmountInput" type="text"
-                    placeholder="Amount" />
-                  <div class="">Small text under the amount input</div>
-                </div>
-              </div>
-              <div class="error">Amount out of range</div>
-            </div>
-            <!-- [END] AMOUNT FORM SECTION -->
-          </div>
-          <!-- [END] LOGO AND AMOUNT ROW -->
-
-          <!-- [BEGIN] PAYMENT DATA ROW -->
-          <div class="payment-data-row">
-            <div class="payment-data-fields-container">
-              <!-- [BEGIN] FULL CARD DATA FORM SECTION   -->
-              <div class="input-container">
-                <label for="card.number" class="input-label">Card number</label>
-                <input id="card.number" name="card.number" class="text-input has-error" type="text"
-                  placeholder="Card Number" />
-                <div class="error">Invalid Card</div>
-              </div>
-
-              <div class="input-container">
-                <label for="card.holder" class="input-label">Card holder name</label>
-                <input id="card.holder" name="card.holder" class="text-input has-error" type="text"
-                  placeholder="Holder Name" />
-                <div class="error">Invalid Holder</div>
-              </div>
-
-              <div class="date-cvv">
-                <div class="small-input-wapper">
-                  <label for="card.expiryMonth" class="input-label">Exp/Month</label>
-                  <input id="card.expiryMonth" class="text-input has-error" name="card.expiryMonth" type="text"
-                    placeholder="EXP/MM" />
-                </div>
-                <div class="small-input-wapper">
-                  <label for="card.expiryYear" class="input-label">Exp/Year</label>
-                  <input id="card.expiryYear" class="text-input has-error" name="card.expiryYear" type="text"
-                    placeholder="EXP/YY" />
-                </div>
-                <div class="small-input-wapper">
-                  <label for="card.cvv" class="input-label">CVV2/CVC</label>
-                  <input id="card.cvv" class="text-input has-error" name="card.cvv" type="text"
-                    placeholder="CVV2/CVC" />
-                </div>
-              </div>
-              <div class="error">Expired Card</div>
-              <div class="save-card-container">
-                <input type="checkbox" id="saveCard" />
-                <label for="saveCard">Save Card</label>
-              </div>
-              <!-- [END] FULL CARD DATA FORM SECTION   -->
-
-              <!-- [BEGIN] CUSTOM FIELD FORM SECTION   -->
-              <div class="input-container">
-                <label for="cashier.customField" class="input-label">Account ID</label>
-                <input id="cashier.customField" name="cashier.customField" class="text-input has-error" type="text"
-                  placeholder="123456789" />
-                <div class="error">Invalid Acount id</div>
-              </div>
-              <!-- [END] CUSTOM FIELD FORM SECTION   -->
-
-              <!-- [BEGIN] SAVED DATA FORM SECTION   -->
-              <div>
-                <div class="select mb-8em" tabindex="1">
-                  <input class="options-select option-input" name="selectors" type="radio" id="opt1" checked>
-                  <label for="opt1" class="option">
-                    <div class="option-content-conteiner">
-                      <p>123456789</p>
-                      <div class="delete-icon"><img src="img/delete-icon.svg" /></div>
-                    </div>
-                  </label>
-                  <input class="options-select option-input" name="selectors" type="radio" id="opt2">
-                  <label for="opt2" class="option">
-                    <div class="option-content-conteiner">
-                      <p>222333444</p>
-                      <div class="delete-icon"><img src="img/delete-icon.svg" /></div>
-                    </div>
-                  </label>
-                  <input class="options-select option-input" name="selectors" type="radio" id="opt3">
-                  <label for="opt3" class="option">
-                    <div class="option-content-conteiner">
-                      <p>123123123</p>
-                      <div class="delete-icon"><img src="img/delete-icon.svg" /></div>
-                    </div>
-                  </label>
-                  <input class="options-select option-input" name="selectors" type="radio" id="opt4">
-                  <label for="opt4" class="option" checked>
-                    <div class="option-content-conteiner">
-                      <p>44444444444</p>
-                      <div class="delete-icon"><img src="img/delete-icon.svg" /></div>
-                    </div>
-                  </label>
-                </div>
-                <div class="add-new">
-                  <span>+</span>
-                  <p class="text-new">Use different account number</p>
-                </div>
-              </div>
-              <!-- [END] SAVED DATA FORM SECTION   -->
-            </div>
-          </div>
-          <!-- [END] PAYMENT DATA ROW -->
-
-          <!-- [BEGIN] SUBMIT PAYMENT ROW -->
-          <div class="submit-row">
-            <div class="submit-container">
-              <button class="submit-button mb-8em">Submit</button>
-              <a class="cancel-link mb-8em" href="#">Cancel</a>
-              <div class="cards-brands mb-8em">
-                <img src="img//cc-images.svg" />
-              </div>
-              <div class="pci-logo-wrapper mb-8em">
-                <img class="pci-logo" src="img/pci-dss-logo.svg" />
-              </div>
-            </div>
-          </div>
-          <!-- [END] SUBMIT PAYMENT ROW -->
-          </form>
-        </div>
-      </div>
     </section>
 
     <!-- [BEGIN] PAYMENT METHODS GRID   -->
     <section id="methodsContainer" class="flex-container">
-      <div id="method1" class="card" data-method="CREDITCARD" data-selected="true" data-amount=""
-        data-predefinedamounts="20:30:40" data-defaultamount="10" data-currency="EUR" data-customPaymentMethod=""
-        data-errors="" data-customField="fullCard" data-logo="img/bigwallet.svg">
+      <div id="method1" class="card" data-method="CREDITCARD" data-amountrange="10 EUR to 100 EUR" data-selected=true
+        data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10" data-currency="EUR"
+        data-custompaymentmethod="" data-errors="" data-customfield="fullCard" data-logo="img/bigwallet.svg"
+        data-customfieldvalue=[1,3,4,5]>
         <img src="img/bigwallet.svg">
         <p>Credit Card</p>
       </div>
       <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
-        data-currency="EUR" data-customPaymentMethod="CREDTICARD-2" data-errors="" data-customField="cardPan">
+        data-currency="EUR" data-custompaymentmethod="CREDTICARD-2" data-errors="" data-customField="cardPan">
         <img src="img/bigwallet.svg">
         <p>Custom card Method</p>
       </div>
       <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
-        data-currency="EUR" data-customPaymentMethod="MOBILEPAY" data-errors="" data-customField="accountId">
+        data-currency="EUR" data-custompaymentmethod="MOBILEPAY" data-errors="" data-customField="accountId">
         <img src="img/bigwallet.svg">
         <p>Custom Mobile</p>
       </div>
       <div id="method2" class="card" data-amount="" data-method="ANOTHERMETHOD" data-predefinedamounts="20:30:40"
-        data-defaultamount="10" data-currency="EUR" data-customPaymentMethod="" data-errors="" data-customField="">
+        data-defaultamount="10" data-currency="EUR" data-custompaymentmethod="" data-errors="" data-customField="">
         <img src="img/bigwallet.svg">
         <p>Regular</p>
       </div>
       <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
-        data-currency="EUR" data-customPaymentMethod="CREDTICARD-3" data-errors="1" data-customField="fullCard">
+        data-currency="EUR" data-custompaymentmethod="CREDTICARD-3" data-errors="1" data-customField="fullCard">
         <img src="img/bigwallet.svg">
         <p>Custom card - error</p>
       </div>
