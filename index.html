@@ -20,28 +20,28 @@
     <!-- [BEGIN] PAYMENT METHODS GRID   -->
     <section id="methodsContainer" class="flex-container">
       <div id="method1" class="card" data-method="CREDITCARD" data-amountrange="10 EUR to 100 EUR" data-selected=true
-        data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10" data-currency="EUR"
+        data-amount="" data-error="Amount out of range" data-predefinedamounts="20:30:40" data-defaultamount="10" data-currency="EUR"
         data-custompaymentmethod="" data-errors="" data-customfield="fullCard" data-logo="img/bigwallet.svg"
-        data-customfieldvalue=[1,3,4,5]>
+        data-customfieldvalue=[1,3,4,5] data-amountlabel="Amount">
         <img src="img/bigwallet.svg">
         <p>Credit Card</p>
       </div>
       <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
-        data-currency="EUR" data-custompaymentmethod="CREDTICARD-2" data-errors="" data-customField="cardPan">
+        data-currency="EUR" data-amountlabel="Amount" data-custompaymentmethod="CREDTICARD-2" data-errors="" data-customField="cardPan">
         <img src="img/bigwallet.svg">
         <p>Custom card Method</p>
       </div>
       <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
-        data-currency="EUR" data-custompaymentmethod="MOBILEPAY" data-errors="" data-customField="accountId">
+        data-currency="EUR" data-amountlabel="Amount" data-custompaymentmethod="MOBILEPAY" data-errors="" data-customField="accountId">
         <img src="img/bigwallet.svg">
         <p>Custom Mobile</p>
       </div>
       <div id="method2" class="card" data-amount="" data-method="ANOTHERMETHOD" data-predefinedamounts="20:30:40"
-        data-defaultamount="10" data-currency="EUR" data-custompaymentmethod="" data-errors="" data-customField="">
+        data-defaultamount="10" data-amountlabel="Amount" data-currency="EUR" data-custompaymentmethod="" data-errors="" data-customField="">
         <img src="img/bigwallet.svg">
         <p>Regular</p>
       </div>
-      <div id="method2" class="card" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
+      <div id="method2" class="card" data-amountlabel="Amount" data-amount="" data-predefinedamounts="20:30:40" data-defaultamount="10"
         data-currency="EUR" data-custompaymentmethod="CREDTICARD-3" data-errors="1" data-customField="fullCard">
         <img src="img/bigwallet.svg">
         <p>Custom card - error</p>
