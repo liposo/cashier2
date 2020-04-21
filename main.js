@@ -82,7 +82,7 @@ function buildAmount(method) {
         amountContainerDiv.appendChild(buildRadioManualAmount(method));
 
     } else if (method.amount) {
-        amountContainerDiv.appendChild(manualAmountRow);
+        amountContainerDiv.appendChild(buildManualAmount(method));
     }
 
     if (method.error) {
