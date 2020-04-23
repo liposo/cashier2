@@ -267,6 +267,7 @@
 .submit-button {
   height: 45px;
   width: 100%;
+  background-image: linear-gradient(79deg, #eb595c, #ea5293)
 }
 
 .cancel-link {}
@@ -315,7 +316,7 @@
   pointer-events: none;
   order: 2;
   z-index: 1;
-  transition: background .2s ease-in-out;
+  transition: background .1s ease-in-out;
   box-sizing: border-box;
   overflow: hidden;
   white-space: nowrap;
@@ -341,6 +342,7 @@
   order: 1;
   z-index: 2;
   background: white;
+  background-image: linear-gradient(79deg, #eb595c, #ea5293);
   border-top: none;
   position: relative;
   color: black;

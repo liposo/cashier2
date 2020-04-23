@@ -36,7 +36,35 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     var form = document.createElement("form");
     form.id = "cashierForm";
     form.classList = "form-wrapper";
+
+    // append logo and amount row
     form.appendChild(buildLogoAmountRow(methodData));
+
+    //<div class="payment-data-row">
+    var paymentDataRow = document.createElement("div");
+    paymentDataRow.classList = "payment-data-row";
+
+    //<div class="payment-data-fields-container">
+    var paymentFieldsContainer = document.createElement("div");
+    paymentFieldsContainer.classList = "payment-data-fields-container";
+
+    //append custom field
+    switch (methodData.customfield) {
+        case "fullCard":
+            paymentFieldsContainer.appendChild(buildFullCard(method));
+            break;
+        case "cardPan":
+        case "phone":
+        case "accountId":
+            paymentFieldsContainer.appendChild(buildCustomField(method));
+            break;
+        default:
+    }
+    paymentDataRow.appendChild(paymentFieldsContainer);
+    form.appendChild(paymentDataRow);
+
+    // append submit form row
+    form.appendChild(buildSubmitFormRow(method));
 
     selectedMethod.appendChild(form);
     cashierFormSection.appendChild(selectedMethod);
@@ -47,6 +75,17 @@ function buildPaymentForm(cards, cashierFormSection, method) {
             numeral: true,
             numeralDecimalMark: '.',
             delimiter: ' '
+        });
+    }
+
+    var cardPanField = document.querySelector(".cardPan");
+    if (cardPanField) {
+        new Cleave('.cardPan', {
+            creditCard: true,
+            creditCardStrictMode: true
+        });
+        cardPanField.addEventListener("blur", function () {
+            isCardValid(cardPanField.value);
         });
     }
 };
@@ -102,44 +141,44 @@ function buildAmount(method) {
 }
 
 function buildPredefinedAmounts(method) {
-     //<div class="predefined-amount-row">
-     var predefinedAmountRowDiv = document.createElement("div");
-     predefinedAmountRowDiv.classList = "predefined-amount-row";
+    //<div class="predefined-amount-row">
+    var predefinedAmountRowDiv = document.createElement("div");
+    predefinedAmountRowDiv.classList = "predefined-amount-row";
 
-     //<span>Amount: </span>
-     var amountLabel = document.createElement("label");
-     amountLabel.innerHTML = method.amountlabel + ": ";
-     predefinedAmountRowDiv.appendChild(amountLabel);
+    //<span>Amount: </span>
+    var amountLabel = document.createElement("label");
+    amountLabel.innerHTML = method.amountlabel + ": ";
+    predefinedAmountRowDiv.appendChild(amountLabel);
 
-     var predefinedAmounts = method.predefinedamounts.split(":");
-     for (var i = 0; i < predefinedAmounts.length; i++) {
-         predefinedAmountRowDiv.appendChild(buildPredefinedamountRadio(predefinedAmounts[i]));
-     }
+    var predefinedAmounts = method.predefinedamounts.split(":");
+    for (var i = 0; i < predefinedAmounts.length; i++) {
+        predefinedAmountRowDiv.appendChild(buildPredefinedamountRadio(predefinedAmounts[i]));
+    }
 
-     return predefinedAmountRowDiv;
+    return predefinedAmountRowDiv;
 }
 
 function buildPredefinedamountRadio(amount) {
-     //<label class="radio-container">
-     var customRadio = document.createElement("label");
-     customRadio.classList = "radio-container";
-     customRadio.innerText = amount;
+    //<label class="radio-container">
+    var customRadio = document.createElement("label");
+    customRadio.classList = "radio-container";
+    customRadio.innerText = amount;
 
-     //<input id="amount100" name="amount" type="radio" value="100" checked="checked">
-     var radioInput = document.createElement("input");
-     radioInput.id = "amount" + amount;
-     radioInput.name = "cashier.amount";
-     radioInput.type = "radio";
-     radioInput.value = amount;
+    //<input id="amount100" name="amount" type="radio" value="100" checked="checked">
+    var radioInput = document.createElement("input");
+    radioInput.id = "amount" + amount;
+    radioInput.name = "cashier.amount";
+    radioInput.type = "radio";
+    radioInput.value = amount;
 
-     //<span class="checkmark"></span>
-     var radioCheckmark = document.createElement("span");
-     radioCheckmark.classList = "checkmark";
+    //<span class="checkmark"></span>
+    var radioCheckmark = document.createElement("span");
+    radioCheckmark.classList = "checkmark";
 
-     customRadio.appendChild(radioInput);
-     customRadio.appendChild(radioCheckmark);
+    customRadio.appendChild(radioInput);
+    customRadio.appendChild(radioCheckmark);
 
-     return customRadio;
+    return customRadio;
 }
 
 function buildRadioManualAmount(method) {
@@ -179,12 +218,12 @@ function buildRadioManualAmount(method) {
     manualamountInput.value = method.defaultamount;
     manualamountInput.placeholder = "Need to update later" //TODO get text from data-amountplaceholder
     // event listener to select radio on field focus and assignm input value to radio value.
-    manualamountInput.addEventListener("click", function() {
+    manualamountInput.addEventListener("click", function () {
         manualAmountRadio.checked = true;
-        manualAmountRadio.value= this.value;
+        manualAmountRadio.value = this.value;
     });
-    manualamountInput.addEventListener("change", function() {
-        manualAmountRadio.value= this.value;
+    manualamountInput.addEventListener("change", function () {
+        manualAmountRadio.value = this.value;
     });
 
     //<p class="">Small text under the amount input</p>
@@ -209,38 +248,58 @@ function buildErrorDiv(method) {
 }
 
 function buildManualAmount(method) {
-     //<div class="amount-container">
-     var amountContainerDiv = document.createElement("div");
-     amountContainerDiv.classList = "amount-container";
+    //<div class="amount-container">
+    var amountContainerDiv = document.createElement("div");
+    amountContainerDiv.classList = "amount-container";
 
-     //<div class="manual-amount-row">
-     var manualAmountRow = document.createElement("div");
-     manualAmountRow.classList = "manual-amount-row";
+    //<div class="manual-amount-row">
+    var manualAmountRow = document.createElement("div");
+    manualAmountRow.classList = "manual-amount-row";
 
-     //<div class="manual-amount">
-     var manualamount = document.createElement("div");
-     manualAmount.classList = "manual-amount";
+    //<div class="manual-amount">
+    var manualamount = document.createElement("div");
+    manualAmount.classList = "manual-amount";
 
-     //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
-     var manualamountInput = document.createElement("input");
-     manualamountInput.classList = "amount";
-     manualamountInput.id = "manualAmountInput";
-     manualamountInput.name = "amount";
-     manualamountInput.type = "text";
-     manualamountInput.value = method.defaultamount;
-     manualamountInput.placeholder = "Need to update later" //get text from data-amountplaceholder
+    //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
+    var manualamountInput = document.createElement("input");
+    manualamountInput.classList = "amount";
+    manualamountInput.id = "manualAmountInput";
+    manualamountInput.name = "amount";
+    manualamountInput.type = "text";
+    manualamountInput.value = method.defaultamount;
+    manualamountInput.placeholder = "Need to update later" //get text from data-amountplaceholder
 
-     //<p class="">Small text under the amount input</p>
-     var textUnderAmountInput = document.createElement(p);
-     textUnderAmountInput.innerHTML = "Need to update later"; //get text from data-textunderamount
+    //<p class="">Small text under the amount input</p>
+    var textUnderAmountInput = document.createElement(p);
+    textUnderAmountInput.innerHTML = "Need to update later"; //get text from data-textunderamount
 
-     manualamount.appendChild(manualamountInput);
-     manualamount.appendChild(textUnderAmountInput);
+    manualamount.appendChild(manualamountInput);
+    manualamount.appendChild(textUnderAmountInput);
 
-     manualAmountRow.appendChild(manualamount);
+    manualAmountRow.appendChild(manualamount);
 
-     return manualAmountRow
+    return manualAmountRow
 }
+
+function buildFullCard(method) {}
+
+function buildCustomField(method) {}
+
+function buildSubmitFormRow(method) {
+    // <div class="submit-row">
+    //     <div class="submit-container">
+    //       <button class="submit-button mb-8em">Submit</button>
+    //       <a class="cancel-link mb-8em" href="#">Cancel</a>
+    //       <div class="cards-brands mb-8em">
+    //         <img src="img//cc-images.svg" />
+    //       </div>
+    //       <div class="pci-logo-wrapper mb-8em">
+    //         <img class="pci-logo" src="img/pci-dss-logo.svg" />
+    //       </div>
+    //     </div>
+    //   </div>
+}
+
 
 function getMethodData(method) {
     return mathodData = {
@@ -257,5 +316,28 @@ function getMethodData(method) {
         customFieldValue: method.getAttribute('data-customfieldvalue'),
         amountrange: method.getAttribute('data-amountrange'),
         amountlabel: method.getAttribute('data-amountlabel')
+    }
+}
+
+function isCardValid(value) {
+    if (/[^0-9-\s]+/.test(value)) return false;
+    var check = 0;
+    var even = false;
+    value = value.replace(/\D/g, "");
+
+    for (var n = value.length - 1; n >= 0; n--) {
+        var digitAtN = value.charAt(n);
+        var digitAsInt = parseInt(digitAtN, 10);
+
+        if (even) {
+            if ((digitAsInt *= 2) > 9) digitAsInt -= 9;
+        }
+        check += digitAsInt;
+        even = !even;
+    }
+    if ((check % 10) === 0) {
+        element.classList.remove('has-error');
+    } else {
+        element.classList.add('has-error');
     }
 }
