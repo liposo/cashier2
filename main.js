@@ -26,6 +26,7 @@ window.addEventListener("load", function () {
 
 function buildPaymentForm(cards, cashierFormSection, method) {
     var methodData = getMethodData(method);
+    console.log(methodData);
 
     //<div id="selectedMethod" class="method-container">
     var selectedMethod = document.createElement("div");
@@ -44,27 +45,22 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     var paymentDataRow = document.createElement("div");
     paymentDataRow.classList = "payment-data-row";
 
-    //<div class="payment-data-fields-container">
-    var paymentFieldsContainer = document.createElement("div");
-    paymentFieldsContainer.classList = "payment-data-fields-container";
-
     //append custom field
     switch (methodData.customfield) {
         case "fullCard":
-            paymentFieldsContainer.appendChild(buildFullCard(method));
+            paymentDataRow.appendChild(buildFullCard(methodData));
             break;
         case "cardPan":
         case "phone":
         case "accountId":
-            paymentFieldsContainer.appendChild(buildCustomField(method));
+            // paymentDataRow.appendChild(buildCustomField(methodData));
             break;
         default:
     }
-    paymentDataRow.appendChild(paymentFieldsContainer);
     form.appendChild(paymentDataRow);
 
     // append submit form row
-    form.appendChild(buildSubmitFormRow(method));
+    form.appendChild(buildSubmitFormRow(methodData));
 
     selectedMethod.appendChild(form);
     cashierFormSection.appendChild(selectedMethod);
@@ -85,7 +81,7 @@ function buildPaymentForm(cards, cashierFormSection, method) {
             creditCardStrictMode: true
         });
         cardPanField.addEventListener("blur", function () {
-            isCardValid(cardPanField.value);
+            isCardValid(cardPanField);
         });
     }
 };
@@ -217,7 +213,8 @@ function buildRadioManualAmount(method) {
     manualamountInput.type = "text";
     manualamountInput.value = method.defaultamount;
     manualamountInput.placeholder = "Need to update later" //TODO get text from data-amountplaceholder
-    // event listener to select radio on field focus and assignm input value to radio value.
+
+    // event listener to select radio on field focus and assign input value to radio value.
     manualamountInput.addEventListener("click", function () {
         manualAmountRadio.checked = true;
         manualAmountRadio.value = this.value;
@@ -281,25 +278,150 @@ function buildManualAmount(method) {
     return manualAmountRow
 }
 
-function buildFullCard(method) {}
+function buildFullCard(method) {
+    var labels = method.fullcardlabels.split(":");
+    var placeholders = method.fullcardplaceholder.split(":");
+
+    //<div class="payment-data-fields-container">
+    var paymentFieldsContainer = document.createElement("div");
+    paymentFieldsContainer.classList = "payment-data-fields-container";
+
+    paymentFieldsContainer.appendChild(buildInput("input-container",
+        "card.number",
+        "text-input cardPan",
+        labels[0] != undefined ? labels[0] : "Card Number",
+        "input-label",
+        placeholders[0] != undefined ? placeholders[0] : "Card Number",
+        method
+    ));
+
+    paymentFieldsContainer.appendChild(buildInput("input-container",
+        "card.holder",
+        "text-input",
+        labels[1] != undefined ? labels[1] : "Holder Name",
+        "input-label",
+        placeholders[1] != undefined ? placeholders[1] : "Holder Name",
+        method
+    ));
+
+    //<div class="date-cvv">
+    var dateCvvRow = document.createElement("div");
+    dateCvvRow.classList = "date-cvv";
+
+    dateCvvRow.appendChild(buildInput("small-input-wapper",
+        "card.expiryMonth",
+        "text-input",
+        labels[2] != undefined ? labels[2] : "EXP/MM",
+        "input-label",
+        placeholders[2] != undefined ? placeholders[2] : "MM",
+        method));
+
+    dateCvvRow.appendChild(buildInput("small-input-wapper",
+        "card.expiryYear",
+        "text-input",
+        labels[3] != undefined ? labels[3] : "EXP/YY",
+        "input-label",
+        placeholders[3] != undefined ? placeholders[3] : "YY",
+        method));
+
+    dateCvvRow.appendChild(buildInput("small-input-wapper",
+        "card.cvv",
+        "text-input",
+        labels[4] != undefined ? labels[4] : "CVV2/CVC",
+        "input-label",
+        placeholders[4] != undefined ? placeholders[4] : "CVV2/CVC",
+        method));
+
+    paymentFieldsContainer.appendChild(dateCvvRow);
+
+    return paymentFieldsContainer;
+}
+
+//This function can be more generic
+function buildInput(containerClass, inputName, inputClass, label, labelClass, placeholder, method) {
+    //<div class="input-container">
+    var inputContainer = document.createElement("div");
+    inputContainer.classList = containerClass;
+
+    //<label for="card.number" class="input-label">Card number</label>
+    var inputLabel = document.createElement("label");
+    inputLabel.htmlFor = inputName;
+    inputLabel.classList = labelClass
+    inputLabel.innerHTML = label;
+
+    //<input id="card.number" name="card.number" class="text-input has-error" type="text" placeholder="Card Number" />
+    var input = document.createElement("input");
+    input.type = ("text");
+    input.id = inputName;
+    input.name = inputName;
+    input.classList = inputClass;
+    input.placeholder = placeholder;
+    if (method.error != undefined) {
+        input.classList.add("has-error");
+    }
+
+    inputContainer.appendChild(inputLabel);
+    inputContainer.appendChild(input);
+
+    //<div class="error">Invalid Card</div>
+    if (method.error) {
+        inputContainer.appendChild(buildErrorDiv(method));
+    }
+
+    return inputContainer
+}
 
 function buildCustomField(method) {}
 
 function buildSubmitFormRow(method) {
-    // <div class="submit-row">
-    //     <div class="submit-container">
-    //       <button class="submit-button mb-8em">Submit</button>
-    //       <a class="cancel-link mb-8em" href="#">Cancel</a>
-    //       <div class="cards-brands mb-8em">
-    //         <img src="img//cc-images.svg" />
-    //       </div>
-    //       <div class="pci-logo-wrapper mb-8em">
-    //         <img class="pci-logo" src="img/pci-dss-logo.svg" />
-    //       </div>
-    //     </div>
-    //   </div>
-}
+    //<div class="submit-row">
+    var submitRow = document.createElement("div");
+    submitRow.classList = "submit-row";
 
+    //<div class="submit-container">
+    var submitContainer = document.createElement("div");
+    submitContainer.classList = "submit-container";
+
+    //<button class="submit-button mb-8em">Submit</button>
+    var button = document.createElement("button");
+    button.id = "cashierFormSubmit"
+    button.classList = "submit-button mb-8em";
+    button.innerText = method.labels.submit;
+    submitContainer.appendChild(button);
+    
+    //<a class="cancel-link mb-8em" href="#">Cancel</a>
+    var cancelLink = document.createElement("a");
+    cancelLink.classList = "cancel-link mb-8em"
+    cancelLink.innerText = method.labels.cancel;
+    submitContainer.appendChild(cancelLink);
+
+    if(method.customfield === "fullCard") {
+        //<div class="cards-brands mb-8em">
+        var cardLogos = document.createElement("div");
+        cardLogos.classList = "cards-brands mb-8em";
+        
+        //<img src="img/cc-images.svg" />
+        var cardLogosImg = document.createElement("img");
+        cardLogosImg.src = "img/cc-images.svg";    
+        cardLogos.appendChild(cardLogosImg);
+        submitContainer.appendChild(cardLogos);
+
+        //<div class="pci-logo-wrapper mb-8em">
+        var pciLogo = document.createElement("div");
+        pciLogo.classList = "pci-logo-wrapper mb-8em";
+
+        //<img class="pci-logo" src="img/pci-dss-logo.svg" />
+        var pciLogoImg = document.createElement("img");
+        pciLogoImg.classList = "pci-logo";
+        pciLogoImg.src = "img/pci-dss-logo.svg";    
+        pciLogo.appendChild(pciLogoImg);
+
+        submitContainer.appendChild(pciLogo);
+    }
+    submitRow.appendChild(submitContainer);
+
+    return submitRow;
+}
 
 function getMethodData(method) {
     return mathodData = {
@@ -315,11 +437,16 @@ function getMethodData(method) {
         logo: method.getAttribute('data-logo'),
         customFieldValue: method.getAttribute('data-customfieldvalue'),
         amountrange: method.getAttribute('data-amountrange'),
-        amountlabel: method.getAttribute('data-amountlabel')
+        amountlabel: method.getAttribute('data-amountlabel'),
+        fullcardplaceholder: method.getAttribute('data-fullcardplaceholder'),
+        fullcardlabels: method.getAttribute('data-fullcardlabels'),
+        labels: JSON.parse(method.getAttribute("data-labels"))
     }
 }
 
-function isCardValid(value) {
+function isCardValid(element) {
+    var value = element.value;
+
     if (/[^0-9-\s]+/.test(value)) return false;
     var check = 0;
     var even = false;
