@@ -223,6 +223,7 @@ function buildManualAmount(method) {
 
      //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
      var manualamountInput = document.createElement("input");
+     manualamountInput.classList = "amount";
      manualamountInput.id = "manualAmountInput";
      manualamountInput.name = "amount";
      manualamountInput.type = "text";
