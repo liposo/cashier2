@@ -40,6 +40,15 @@ function buildPaymentForm(cards, cashierFormSection, method) {
 
     selectedMethod.appendChild(form);
     cashierFormSection.appendChild(selectedMethod);
+
+    // CleaveJS
+    if (document.querySelector(".amount")) {
+        new Cleave('.amount', {
+            numeral: true,
+            numeralDecimalMark: '.',
+            delimiter: ' '
+        });
+    }
 };
 
 function buildLogoAmountRow(method) {
@@ -104,29 +113,33 @@ function buildPredefinedAmounts(method) {
 
      var predefinedAmounts = method.predefinedamounts.split(":");
      for (var i = 0; i < predefinedAmounts.length; i++) {
-         //<label class="radio-container">
-         var customRadio = document.createElement("label");
-         customRadio.classList = "radio-container";
-         customRadio.innerText = predefinedAmounts[i];
-
-         //<input id="amount100" name="amount" type="radio" value="100" checked="checked">
-         var radioInput = document.createElement("input");
-         radioInput.id = "amount" + predefinedAmounts[i];
-         radioInput.name = "cashier.amount";
-         radioInput.type = "radio";
-         radioInput.value = predefinedAmounts[i];
-
-         //<span class="checkmark"></span>
-         var radioCheckmark = document.createElement("span");
-         radioCheckmark.classList = "checkmark";
-
-         customRadio.appendChild(radioInput);
-         customRadio.appendChild(radioCheckmark);
-
-         predefinedAmountRowDiv.appendChild(customRadio);
+         predefinedAmountRowDiv.appendChild(buildPredefinedamountRadio(predefinedAmounts[i]));
      }
 
      return predefinedAmountRowDiv;
+}
+
+function buildPredefinedamountRadio(amount) {
+     //<label class="radio-container">
+     var customRadio = document.createElement("label");
+     customRadio.classList = "radio-container";
+     customRadio.innerText = amount;
+
+     //<input id="amount100" name="amount" type="radio" value="100" checked="checked">
+     var radioInput = document.createElement("input");
+     radioInput.id = "amount" + amount;
+     radioInput.name = "cashier.amount";
+     radioInput.type = "radio";
+     radioInput.value = amount;
+
+     //<span class="checkmark"></span>
+     var radioCheckmark = document.createElement("span");
+     radioCheckmark.classList = "checkmark";
+
+     customRadio.appendChild(radioInput);
+     customRadio.appendChild(radioCheckmark);
+
+     return customRadio;
 }
 
 function buildRadioManualAmount(method) {
@@ -159,13 +172,20 @@ function buildRadioManualAmount(method) {
 
     //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
     var manualamountInput = document.createElement("input");
-    manualamountInput.classList = "text-input";
+    manualamountInput.classList = "text-input amount";
     manualamountInput.id = "manualAmountInput";
     manualamountInput.name = "amount";
     manualamountInput.type = "text";
     manualamountInput.value = method.defaultamount;
     manualamountInput.placeholder = "Need to update later" //TODO get text from data-amountplaceholder
-    //TODO add event listener to select radio on field focus and assignm input value to radio value.
+    // event listener to select radio on field focus and assignm input value to radio value.
+    manualamountInput.addEventListener("click", function() {
+        manualAmountRadio.checked = true;
+        manualAmountRadio.value= this.value;
+    });
+    manualamountInput.addEventListener("change", function() {
+        manualAmountRadio.value= this.value;
+    });
 
     //<p class="">Small text under the amount input</p>
     var textUnderAmountInput = document.createElement("p");
