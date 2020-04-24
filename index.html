@@ -21,10 +21,12 @@
       <div id="method1" class="card" data-method="CREDITCARD" data-amountrange="10 EUR to 100 EUR" data-selected=true
         data-amount="" data-error="TODO: handle errors" data-predefinedamounts="20:30:40" data-defaultamount="10"
         data-currency="EUR" data-custompaymentmethod="" data-customfield="fullCard" data-logo="img/1.png"
-        data-customfieldvalue="1:2:3:4:5" data-amountlabel="Amount"
-        data-fullcardplaceholder="Card Number:Name on card:MM:YY:CVV2/CVC"
-        data-fullcardlabels="Card Number:Card Holder:EXP/MM:EXP/YY:CVV2/CVC"
-        data-labels='{"submit":"Submit", "cancel":"Cancel"}'>
+        data-customfieldvalue='{"token1":"4000xxxxxxx0002", "token2":"4000xxxxxxx0001", "token3":"4111xxxxxxx1111"}'
+        data-amountlabel="Amount"
+        data-fullcardplaceholder='{"pan":"Card Number", "holder":"Card Holder", "expiryMonth":"EXP/MM", "expiryYear":"EXP/YY", "cvv":"CVV2/CVC"}'
+        data-fullcardlabels='{"pan":"Card Number", "holder":"Card Holder", "expiryMonth":"EXP/MM", "expiryYear":"EXP/YY", "cvv":"CVV2/CVC"}'
+        data-labels='{"amount":"Amount", "submit":"Submit", "cancel":"Cancel", "addNew":"Add new", "save":"Save data"}'
+        data-textunderamount="Small text under amount" >
         <img src="img/1.png">
         <p>Credit Card</p>
       </div>

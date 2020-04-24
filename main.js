@@ -143,7 +143,7 @@ function buildPredefinedAmounts(method) {
 
     //<span>Amount: </span>
     var amountLabel = document.createElement("label");
-    amountLabel.innerHTML = method.amountlabel + ": ";
+    amountLabel.innerHTML = method.labels.amount + ": ";
     predefinedAmountRowDiv.appendChild(amountLabel);
 
     var predefinedAmounts = method.predefinedamounts.split(":");
@@ -191,6 +191,7 @@ function buildRadioManualAmount(method) {
     manualAmountRadio.id = "manualAmountRadio";
     manualAmountRadio.name = "cashier.amount";
     manualAmountRadio.type = "radio";
+    manualAmountRadio.value = method.defaultamount;
 
     //<span class="checkmark"></span>
     var manualAmountCheckmark = document.createElement("span");
@@ -212,7 +213,7 @@ function buildRadioManualAmount(method) {
     manualamountInput.name = "amount";
     manualamountInput.type = "text";
     manualamountInput.value = method.defaultamount;
-    manualamountInput.placeholder = "Need to update later" //TODO get text from data-amountplaceholder
+    manualamountInput.placeholder = method.labels.amount;
 
     // event listener to select radio on field focus and assign input value to radio value.
     manualamountInput.addEventListener("click", function () {
@@ -225,7 +226,7 @@ function buildRadioManualAmount(method) {
 
     //<p class="">Small text under the amount input</p>
     var textUnderAmountInput = document.createElement("p");
-    textUnderAmountInput.innerHTML = "Need to update later"; //TODO get text from data-textunderamount
+    textUnderAmountInput.innerHTML = method.textUnderAmount;
 
     manualAmount.appendChild(manualamountInput);
     manualAmount.appendChild(textUnderAmountInput);
@@ -264,12 +265,11 @@ function buildManualAmount(method) {
     manualamountInput.name = "amount";
     manualamountInput.type = "text";
     manualamountInput.value = method.defaultamount;
-    manualamountInput.placeholder = "Need to update later" //get text from data-amountplaceholder
+    manualamountInput.placeholder = method.labels.amount;
 
     //<p class="">Small text under the amount input</p>
     var textUnderAmountInput = document.createElement(p);
-    textUnderAmountInput.innerHTML = "Need to update later"; //get text from data-textunderamount
-
+    textUnderAmountInput.innerHTML = method.textUnderAmount
     manualamount.appendChild(manualamountInput);
     manualamount.appendChild(textUnderAmountInput);
 
@@ -279,9 +279,6 @@ function buildManualAmount(method) {
 }
 
 function buildFullCard(method) {
-    var labels = method.fullcardlabels.split(":");
-    var placeholders = method.fullcardplaceholder.split(":");
-
     //<div class="payment-data-fields-container">
     var paymentFieldsContainer = document.createElement("div");
     paymentFieldsContainer.classList = "payment-data-fields-container";
@@ -289,18 +286,18 @@ function buildFullCard(method) {
     paymentFieldsContainer.appendChild(buildInput("input-container",
         "card.number",
         "text-input cardPan",
-        labels[0] != undefined ? labels[0] : "Card Number",
+        method.fullcardlabels.pan != undefined ? method.fullcardlabels.pan : "Card Number",
         "input-label",
-        placeholders[0] != undefined ? placeholders[0] : "Card Number",
+        method.fullcardplaceholder.pan != undefined ? method.fullcardplaceholder.pan : "Card Number",
         method
     ));
 
     paymentFieldsContainer.appendChild(buildInput("input-container",
         "card.holder",
         "text-input",
-        labels[1] != undefined ? labels[1] : "Holder Name",
+        method.fullcardlabels.holder != undefined ? method.fullcardlabels.holder : "Holder Name",
         "input-label",
-        placeholders[1] != undefined ? placeholders[1] : "Holder Name",
+        method.fullcardplaceholder.holder != undefined ? method.fullcardplaceholder.holder : "Holder Name",
         method
     ));
 
@@ -311,25 +308,25 @@ function buildFullCard(method) {
     dateCvvRow.appendChild(buildInput("small-input-wapper",
         "card.expiryMonth",
         "text-input",
-        labels[2] != undefined ? labels[2] : "EXP/MM",
+        method.fullcardlabels.expiryMonth != undefined ? method.fullcardlabels.expiryMonth : "EXP/MM",
         "input-label",
-        placeholders[2] != undefined ? placeholders[2] : "MM",
+        method.fullcardplaceholder.expiryMonth != undefined ? method.fullcardplaceholder.expiryMonth : "MM",
         method));
 
     dateCvvRow.appendChild(buildInput("small-input-wapper",
         "card.expiryYear",
         "text-input",
-        labels[3] != undefined ? labels[3] : "EXP/YY",
+        method.fullcardlabels.expiryYear != undefined ? method.fullcardlabels.expiryYear : "EXP/YY",
         "input-label",
-        placeholders[3] != undefined ? placeholders[3] : "YY",
+        method.fullcardplaceholder.expiryYear != undefined ? method.fullcardplaceholder.expiryYear : "YY",
         method));
 
     dateCvvRow.appendChild(buildInput("small-input-wapper",
         "card.cvv",
         "text-input",
-        labels[4] != undefined ? labels[4] : "CVV2/CVC",
+        method.fullcardlabels.cvv != undefined ? method.fullcardlabels.cvv : "CVV2/CVC",
         "input-label",
-        placeholders[4] != undefined ? placeholders[4] : "CVV2/CVC",
+        method.fullcardplaceholder.cvv != undefined ? method.fullcardplaceholder.cvv : "CVV2/CVC",
         method));
 
     paymentFieldsContainer.appendChild(dateCvvRow);
@@ -356,17 +353,9 @@ function buildInput(containerClass, inputName, inputClass, label, labelClass, pl
     input.name = inputName;
     input.classList = inputClass;
     input.placeholder = placeholder;
-    if (method.error != undefined) {
-        input.classList.add("has-error");
-    }
 
     inputContainer.appendChild(inputLabel);
     inputContainer.appendChild(input);
-
-    //<div class="error">Invalid Card</div>
-    if (method.error) {
-        inputContainer.appendChild(buildErrorDiv(method));
-    }
 
     return inputContainer
 }
@@ -435,12 +424,13 @@ function getMethodData(method) {
         error: method.getAttribute('data-error'),
         customfield: method.getAttribute('data-customfield'),
         logo: method.getAttribute('data-logo'),
-        customFieldValue: method.getAttribute('data-customfieldvalue'),
+        customFieldValue: JSON.parse(method.getAttribute('data-customfieldvalue')),
         amountrange: method.getAttribute('data-amountrange'),
         amountlabel: method.getAttribute('data-amountlabel'),
-        fullcardplaceholder: method.getAttribute('data-fullcardplaceholder'),
-        fullcardlabels: method.getAttribute('data-fullcardlabels'),
-        labels: JSON.parse(method.getAttribute("data-labels"))
+        fullcardplaceholder: JSON.parse(method.getAttribute('data-fullcardplaceholder')),
+        fullcardlabels: JSON.parse(method.getAttribute('data-fullcardlabels')),
+        labels: JSON.parse(method.getAttribute("data-labels")),
+        textUnderAmount: method.getAttribute("data-textunderamount")
     }
 }
 
