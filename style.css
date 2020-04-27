@@ -158,6 +158,7 @@ html {
   margin-bottom: 0.5em;
   letter-spacing: 1px;
   font-size: 14px;
+  align-self: flex-start;
 }
 
 .error {

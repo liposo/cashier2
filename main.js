@@ -125,7 +125,8 @@ function buildAmount(method) {
         amountContainerDiv.appendChild(buildPredefinedAmounts(method));
         amountContainerDiv.appendChild(buildRadioManualAmount(method));
 
-    } else if (method.amount) {
+    } else if (method.amount.length <= 0) {
+        console.log(method.amount.length);
         amountContainerDiv.appendChild(buildManualAmount(method));
     }
 
@@ -256,11 +257,17 @@ function buildManualAmount(method) {
 
     //<div class="manual-amount">
     var manualamount = document.createElement("div");
-    manualAmount.classList = "manual-amount";
+    manualamount.classList = "manual-amount";
 
+    //<span>Amount: </span>
+    var amountLabel = document.createElement("label");
+    amountLabel.innerHTML = method.labels.amount;
+    amountLabel.classList = "input-label";
+    amountLabel.htmlFor = "manualAmountInput";
+    
     //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
     var manualamountInput = document.createElement("input");
-    manualamountInput.classList = "amount";
+    manualamountInput.classList = "text-input amount";
     manualamountInput.id = "manualAmountInput";
     manualamountInput.name = "amount";
     manualamountInput.type = "text";
@@ -268,8 +275,9 @@ function buildManualAmount(method) {
     manualamountInput.placeholder = method.labels.amount;
 
     //<p class="">Small text under the amount input</p>
-    var textUnderAmountInput = document.createElement(p);
+    var textUnderAmountInput = document.createElement("p");
     textUnderAmountInput.innerHTML = method.textUnderAmount
+    manualamount.appendChild(amountLabel);
     manualamount.appendChild(manualamountInput);
     manualamount.appendChild(textUnderAmountInput);
 
