@@ -53,7 +53,7 @@ function buildPaymentForm(cards, cashierFormSection, method) {
         case "cardPan":
         case "phone":
         case "accountId":
-            // paymentDataRow.appendChild(buildCustomField(methodData));
+            paymentDataRow.appendChild(buildCustomField(methodData));
             break;
         default:
     }
@@ -360,7 +360,70 @@ function buildInput(containerClass, inputName, inputClass, label, labelClass, pl
     return inputContainer
 }
 
-function buildCustomField(method) {}
+function buildCustomField(method) {
+    //<div class="payment-data-fields-container">
+    var paymentFieldsContainer = document.createElement("div");
+    paymentFieldsContainer.classList = "payment-data-fields-container";
+
+    //<div class="input-container">
+    var inputContainer = document.createElement("div");
+    inputContainer.classList = "input-container";
+
+    if (method.customfield == "phone") {
+        //<label for="cashier.customInput" class="input-label">Phone Number</label>
+        var inputLabel = document.createElement("label");
+        inputLabel.htmlFor = "cahier." + method.customfield;
+        inputLabel.classList = "input-label"
+        inputLabel.innerHTML = method.customfieldlabel;
+
+        //<div class="phone-wrapper">
+        var phoneWrapper = document.createElement("div");
+        phoneWrapper.classList = "phone-wrapper";
+
+        //<input id="cashier.phoneCountryCode" name="cashier.phoneCountryCode" class="text-input phone-code" type="tel" />
+        var countryCodeInput = document.createElement("input");
+        countryCodeInput.type = ("tel");
+        countryCodeInput.id = "cahier.phoneCountryCode" ;
+        countryCodeInput.name = "cahier.phoneCountryCode";
+        countryCodeInput.classList = "text-input phone-code"
+        countryCodeInput.placeholder = "Code"; //TODO add localization
+
+        //<input id="cashier.phone" name="cashier.number" class="text-input phone" type="tel" placeholder="" />
+        var phoneInput = document.createElement("input");
+        phoneInput.type = ("tel");
+        phoneInput.id = "cahier." + method.customfield;
+        phoneInput.name = "cahier." + method.customfield;
+        phoneInput.classList = "text-input " + method.customfield;
+        phoneInput.placeholder = method.customfieldplaceholder;
+
+        phoneWrapper.appendChild(countryCodeInput);
+        phoneWrapper.appendChild(phoneInput);
+
+        inputContainer.appendChild(inputLabel);
+        inputContainer.appendChild(phoneWrapper);
+    } else {
+        //<label for="cashier.customInput" class="input-label">Account Id</label>
+        var inputLabel = document.createElement("label");
+        inputLabel.htmlFor = "cahier." + method.customfield;
+        inputLabel.classList = "input-label"
+        inputLabel.innerHTML = method.customfieldlabel;
+
+        //<input id="cashier.customInput" name="cashier.customInput" class="text-input has-error" type="text" placeholder="" />
+        var input = document.createElement("input");
+        input.type = ("text");
+        input.id = "cahier." + method.customfield;
+        input.name = "cahier." + method.customfield;
+        input.classList = "text-input " + method.customfield;
+        input.placeholder = method.customfieldplaceholder;
+
+        inputContainer.appendChild(inputLabel);
+        inputContainer.appendChild(input);
+    }
+
+    paymentFieldsContainer.appendChild(inputContainer);
+    
+    return paymentFieldsContainer;
+}
 
 function buildSubmitFormRow(method) {
     //<div class="submit-row">
@@ -377,21 +440,21 @@ function buildSubmitFormRow(method) {
     button.classList = "submit-button mb-8em";
     button.innerText = method.labels.submit;
     submitContainer.appendChild(button);
-    
+
     //<a class="cancel-link mb-8em" href="#">Cancel</a>
     var cancelLink = document.createElement("a");
     cancelLink.classList = "cancel-link mb-8em"
     cancelLink.innerText = method.labels.cancel;
     submitContainer.appendChild(cancelLink);
 
-    if(method.customfield === "fullCard") {
+    if (method.customfield === "fullCard") {
         //<div class="cards-brands mb-8em">
         var cardLogos = document.createElement("div");
         cardLogos.classList = "cards-brands mb-8em";
-        
+
         //<img src="img/cc-images.svg" />
         var cardLogosImg = document.createElement("img");
-        cardLogosImg.src = "img/cc-images.svg";    
+        cardLogosImg.src = "img/cc-images.svg";
         cardLogos.appendChild(cardLogosImg);
         submitContainer.appendChild(cardLogos);
 
@@ -402,7 +465,7 @@ function buildSubmitFormRow(method) {
         //<img class="pci-logo" src="img/pci-dss-logo.svg" />
         var pciLogoImg = document.createElement("img");
         pciLogoImg.classList = "pci-logo";
-        pciLogoImg.src = "img/pci-dss-logo.svg";    
+        pciLogoImg.src = "img/pci-dss-logo.svg";
         pciLogo.appendChild(pciLogoImg);
 
         submitContainer.appendChild(pciLogo);
@@ -430,7 +493,10 @@ function getMethodData(method) {
         fullcardplaceholder: JSON.parse(method.getAttribute('data-fullcardplaceholder')),
         fullcardlabels: JSON.parse(method.getAttribute('data-fullcardlabels')),
         labels: JSON.parse(method.getAttribute("data-labels")),
-        textUnderAmount: method.getAttribute("data-textunderamount")
+        textUnderAmount: method.getAttribute("data-textunderamount"),
+        customfieldplaceholder: method.getAttribute("data-customfieldplaceholder"),
+        customfieldlabel: method.getAttribute("data-customfieldlabel"),
+        customfieldregex: method.getAttribute("data-customfieldregex")
     }
 }
 

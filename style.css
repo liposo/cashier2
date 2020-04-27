@@ -18,7 +18,6 @@
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   align-items: center;
 }
 
@@ -31,7 +30,7 @@
   box-shadow: 3px 3px 5px 0 rgba(157, 152, 171, .19);
   background-color: #fff;
   text-align: center;
-  margin-bottom: 30px;
+  margin: 1em;
   padding: 15px;
   width: 30%;
   height: 30%;
@@ -397,6 +396,18 @@
 /* [END] SELECT ARROW */
 /* [END] CUSTOM SELECT ELEMENT */
 
+.phone-wrapper {
+  display: flex;
+}
+
+.phone-code {
+  flex: 1;
+}
+
+.phone {
+  flex: 5;
+}
+
 /* MARGINS */
 .mb-8em {
   margin-bottom: 0.8em;
@@ -406,8 +417,8 @@
 /* MAX 600px */
 @media only screen and (max-width: 600px) {
   .card {
-    width: 48%;
-    height: 18%;
+    width: 40%;
+    height: 20%;
     transition: none;
   }
 
@@ -428,8 +439,8 @@
 /* BETWEEN 600px and 768px */
 @media only screen and (min-width: 600px) and (max-width: 768px) {
   .card {
-    width: 48%;
-    height: 18%;
+    width: 28%;
+    height: 30%;
     transition: none;
   }
 
