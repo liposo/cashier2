@@ -19,6 +19,21 @@ html {
   font-family: NunitoSans, sans-serif;
 }
 
+.overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  background-color: #fff;
+  z-index: 99999;
+}
+
+.hidden {
+  display: none !important
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -152,6 +167,12 @@ html {
   color: rgba(72, 80, 109, 0.68);
   border: solid 1px rgba(37, 39, 60, 0.28);
   border-radius: 4px;
+}
+
+.text-input:focus {
+  color: rgba(72, 80, 109, 0.78);
+  border-color: rgba(37, 39, 60, 0.68);
+  outline: none;
 }
 
 .input-label {
@@ -291,11 +312,16 @@ html {
   width: 100%;
   border-radius: 2px;
   border: 0;
-  font-size: 14px;
-  background-image: linear-gradient(79deg, #eb595c, #ea5293)
+  font-size: 1em;
+  background-image: linear-gradient(79deg, #eb595c, #ea5293);
+  color: white;
 }
 
-.cancel-link {}
+.cancel-link {
+  margin-top: 1.5em;
+  align-self: center;
+  font-size: 0.8em;
+}
 
 .cards-brands {
   width: 80%;

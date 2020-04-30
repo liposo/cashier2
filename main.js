@@ -62,6 +62,21 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     // append submit form row
     form.appendChild(buildSubmitFormRow(methodData));
 
+    // add hidden inputs
+    form.appendChild(buildHiddenInput("paymentMethod", "", methodData.method));
+    form.appendChild(buildHiddenInput("customPaymentMethod", "", methodData.custompaymentmethod));
+    form.appendChild(buildHiddenInput("currency", "", methodData.currency));
+    form.appendChild(buildHiddenInput("_csrf", "", methodData.token));
+    form.appendChild(buildHiddenInput("_screenHeight", "screenHeight", ""));
+    form.appendChild(buildHiddenInput("_screenWidth", "screenWidth", ""));
+    form.appendChild(buildHiddenInput("_timezone_offset", "timezone_offset", ""));
+    form.appendChild(buildHiddenInput("_latitude", "latitude", ""));
+    form.appendChild(buildHiddenInput("_longitude", "longitude", ""));
+    form.appendChild(buildHiddenInput("_isIframe", "isIframe", ""));
+    form.appendChild(buildHiddenInput("_domain", "domain", ""));
+    form.appendChild(buildHiddenInput("_isJavaEnabled", "javaEnabled", ""));
+    form.appendChild(buildHiddenInput("_screenColorDepth", "screenColorDepth", ""));
+
     selectedMethod.appendChild(form);
     cashierFormSection.appendChild(selectedMethod);
 
@@ -85,6 +100,21 @@ function buildPaymentForm(cards, cashierFormSection, method) {
         });
     }
 };
+
+function buildHiddenInput(name, className, value) {
+    var hiddenInput = document.createElement("input");
+    hiddenInput.type = "hidden";
+    hiddenInput.name = name;
+    if(className.length > 0) {
+        hiddenInput.classList.add(className);
+    }
+    if(value.length > 0) {
+        hiddenInput.value = value;
+    }
+
+
+    return hiddenInput;
+}
 
 function buildLogoAmountRow(method) {
     //<div class="logo-amount-row">
@@ -361,6 +391,7 @@ function buildInput(containerClass, inputName, inputClass, label, labelClass, pl
     input.name = inputName;
     input.classList = inputClass;
     input.placeholder = placeholder;
+    input.required = true;
 
     inputContainer.appendChild(inputLabel);
     inputContainer.appendChild(input);
@@ -395,6 +426,7 @@ function buildCustomField(method) {
         countryCodeInput.name = "cahier.phoneCountryCode";
         countryCodeInput.classList = "text-input phone-code"
         countryCodeInput.placeholder = "Code"; //TODO add localization
+        countryCodeInput.required = true;
 
         //<input id="cashier.phone" name="cashier.number" class="text-input phone" type="tel" placeholder="" />
         var phoneInput = document.createElement("input");
@@ -403,6 +435,7 @@ function buildCustomField(method) {
         phoneInput.name = "cahier." + method.customfield;
         phoneInput.classList = "text-input " + method.customfield;
         phoneInput.placeholder = method.customfieldplaceholder;
+        phoneInput.required = true;
 
         phoneWrapper.appendChild(countryCodeInput);
         phoneWrapper.appendChild(phoneInput);
@@ -423,6 +456,7 @@ function buildCustomField(method) {
         input.name = "cahier." + method.customfield;
         input.classList = "text-input " + method.customfield;
         input.placeholder = method.customfieldplaceholder;
+        input.required = true;
 
         inputContainer.appendChild(inputLabel);
         inputContainer.appendChild(input);
@@ -450,10 +484,11 @@ function buildSubmitFormRow(method) {
     submitContainer.appendChild(button);
 
     //<a class="cancel-link mb-8em" href="#">Cancel</a>
-    var cancelLink = document.createElement("a");
-    cancelLink.classList = "cancel-link mb-8em"
-    cancelLink.innerText = method.labels.cancel;
-    submitContainer.appendChild(cancelLink);
+    // var cancelLink = document.createElement("a");
+    // cancelLink.classList = "cancel-link mb-8em"
+    // cancelLink.innerText = method.labels.cancel;
+    // cancelLink.href = method.cancel;
+    // submitContainer.appendChild(cancelLink);
 
     if (method.customfield === "fullCard") {
         //<div class="cards-brands mb-8em">
@@ -504,7 +539,8 @@ function getMethodData(method) {
         textUnderAmount: method.getAttribute("data-textunderamount"),
         customfieldplaceholder: method.getAttribute("data-customfieldplaceholder"),
         customfieldlabel: method.getAttribute("data-customfieldlabel"),
-        customfieldregex: method.getAttribute("data-customfieldregex")
+        customfieldregex: method.getAttribute("data-customfieldregex"),
+        token: method.getAttribute("data-token")
     }
 }
 
