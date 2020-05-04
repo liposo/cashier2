@@ -48,7 +48,13 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     //append custom field
     switch (methodData.customfield) {
         case "fullCard":
-            paymentDataRow.appendChild(buildFullCard(methodData));
+            if (methodData.customFieldValue != undefined) {
+                paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue, 
+                    paymentDataRow,
+                    methodData.labels.addNew));
+            } else {
+                paymentDataRow.appendChild(buildFullCard(methodData));
+            }
             break;
         case "cardPan":
         case "phone":
@@ -265,7 +271,6 @@ function buildRadioManualAmount(method) {
     var manualamountInput = document.createElement("input");
     manualamountInput.classList = "text-input amount";
     manualamountInput.id = "manualAmountInput";
-    manualamountInput.name = "amount";
     manualamountInput.type = "text";
     manualamountInput.value = method.defaultamount;
     manualamountInput.placeholder = method.labels.amount;
@@ -282,7 +287,7 @@ function buildRadioManualAmount(method) {
 
     // event listener to removed required from manual input if another option is selected
     manualAmountRadio.addEventListener("change", function () {
-        if(!manualAmountRadio.checked) {
+        if (!manualAmountRadio.checked) {
             manualamountInput.checked = false;
         }
     });
@@ -331,7 +336,7 @@ function buildManualAmount(method) {
     var manualamountInput = document.createElement("input");
     manualamountInput.classList = "text-input amount";
     manualamountInput.id = "manualAmountInput";
-    manualamountInput.name = "amount";
+    manualamountInput.name = "cashier.amount"
     manualamountInput.type = "text";
     manualamountInput.value = method.defaultamount;
     manualamountInput.placeholder = method.labels.amount;
@@ -407,24 +412,31 @@ function buildFullCard(method) {
     return paymentFieldsContainer;
 }
 
-function buildSelectSavedData(savedValues) {
+function buildSelectSavedData(savedValues, parent, label) {
     //<div class="selectWrapper">
     var selectWrapper = document.createElement("div");
-    selectWrapper.classList = "selectWrapper";
+    selectWrapper.classList = "select-wrapper";
 
     //<div class="select mb-8em" tabindex="1">
     var customSelect = document.createElement("div");
     customSelect.classList = "select mb-8em";
     customSelect.tabIndex = 1;
 
-    for (const [key, value] of Object.entries(savedValues)) {
-        customSelect.appendChild(buildSelectorInput(value));
-        customSelect.appendChild(buildSelectLabel(key, value));
+    var lenght = Object.keys(savedValues).length;
+    for(var i = 0; i < lenght; i++) {
+        var key = Object.keys(savedValues)[i];
+        var value = Object.values(savedValues)[i];
+
+        console.log(key + " : " + value);
+
+        var selectOption = buildSelectorInput(key, value, i);
+        customSelect.appendChild(selectOption);
+        customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect));
     }
 
     selectWrapper.appendChild(customSelect);
-    selectWrapper.appendChild(buildAddNewButton(method.labels.addNew));
-    
+    selectWrapper.appendChild(buildAddNewButton(label, parent));
+
     return selectWrapper;
 }
 
@@ -445,31 +457,77 @@ function buildAddNewButton(label) {
     addNewContainer.appendChild(plusSign);
     addNewContainer.appendChild(addNewText);
 
+    addNewContainer.addEventListener('click', function () {
+
+    });
+
     return addNewContainer;
 }
 
-function buildSelectorInput(value) {
+function buildSelectorInput(key, value, position) {
     //<input class="options-select option-input" name="selectors" type="radio" id="opt1" checked>
     var input = document.createElement("input");
     input.type = "radio";
     input.id = value;
-    input.value = value;
+    input.value = key;
     input.classList = "options-select option-input";
     input.name = "savedDataSelected";
     input.required = true;
+    if(position == 0) {
+        input.checked = true;
+    }
 
     return input;
 }
 
-function buildSelectLabel(key, value) {
+function buildSelectLabel(key, value, input, parent) {
     //<label for="opt1" class="option">
+    var optionLabel = document.createElement("label");
+    optionLabel.classList = "option";
+    optionLabel.htmlFor = value;
 
     //<div class="option-content-container">
+    var option = document.createElement("div");
+    option.classList = "option-content-container";
 
     //<p>key</p>
+    var optionText = document.createElement("p");
+    optionText.innerHTML = value;
 
     //<div class="delete-icon">
+    var deleteWrapper = document.createElement("div");
+    deleteWrapper.classList = "delete-icon";
+
     //<img src="img/delete-icon.svg" />
+    var deleteIcon = document.createElement("img");
+    deleteIcon.src = "img/delete-icon.svg";
+
+    deleteWrapper.appendChild(deleteIcon);
+
+    option.appendChild(optionText);
+    option.appendChild(deleteWrapper);
+
+    //delete event listener
+    deleteWrapper.addEventListener("click", function(){
+        //TODO fetch delete API
+        console.log(parent);
+        console.log(optionLabel);
+        parent.removeChild(input);
+        parent.removeChild(optionLabel);
+
+        switch(parent.childElementCount) {
+            case 1:
+                parent.firstChild.checked = true;
+                break;
+            case 0: 
+                console.log("Replace with Data inputs");
+                break;
+        }
+    });
+
+    optionLabel.appendChild(option);
+
+    return optionLabel;
 }
 
 //This function can be more generic
