@@ -46,23 +46,24 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     paymentDataRow.classList = "payment-data-row";
 
     //append custom field
-    switch (methodData.customfield) {
-        case "fullCard":
-            if (methodData.customFieldValue != undefined) {
-                paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue, 
-                    paymentDataRow,
-                    methodData.labels.addNew));
-            } else {
+    if (Object.keys(methodData.customFieldValue).length > 0) {
+        paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue, 
+            paymentDataRow,
+            methodData.labels.addNew));
+    } else {
+        switch (methodData.customfield) {
+            case "fullCard":
                 paymentDataRow.appendChild(buildFullCard(methodData));
-            }
-            break;
-        case "cardPan":
-        case "phone":
-        case "accountId":
-            paymentDataRow.appendChild(buildCustomField(methodData));
-            break;
-        default:
+                break;
+            case "cardPan":
+            case "phone":
+            case "accountId":
+                paymentDataRow.appendChild(buildCustomField(methodData));
+                break;
+            default:
+        }
     }
+    
     form.appendChild(paymentDataRow);
 
     // append submit form row

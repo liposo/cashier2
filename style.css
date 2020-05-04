@@ -405,10 +405,15 @@ html {
 .add-new {
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.add-new:hover {
+  cursor: pointer;
 }
 
 .text-new {
-  margin-left: 1em;
+  margin-left: 0.3em;
   text-decoration: underline;
 }
 
