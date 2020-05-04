@@ -105,15 +105,37 @@ function buildHiddenInput(name, className, value) {
     var hiddenInput = document.createElement("input");
     hiddenInput.type = "hidden";
     hiddenInput.name = name;
-    if(className.length > 0) {
+    if (className.length > 0) {
         hiddenInput.classList.add(className);
     }
-    if(value.length > 0) {
+    if (value.length > 0) {
         hiddenInput.value = value;
     }
 
 
     return hiddenInput;
+}
+
+function buildCheckbox(label) {
+    //<label class="checkbox-container">
+    var checkboxContainer = document.createElement("label");
+    checkboxContainer.classList = "checkbox-container";
+    checkboxContainer.innerHTML = label;
+
+    //<input type="checkbox" id="saveData">
+    var checkboxInput = document.createElement("input");
+    checkboxInput.type = "checkbox";
+    checkboxInput.id = "saveData";
+    checkboxContainer.name = "saveData";
+
+    //<span class="checkbox-mark">
+    var mark = document.createElement("span");
+    mark.classList = "checkbox-mark";
+
+    checkboxContainer.appendChild(checkboxInput);
+    checkboxContainer.appendChild(mark);
+
+    return checkboxContainer;
 }
 
 function buildLogoAmountRow(method) {
@@ -197,6 +219,7 @@ function buildPredefinedamountRadio(amount) {
     radioInput.name = "cashier.amount";
     radioInput.type = "radio";
     radioInput.value = amount;
+    radioInput.required = true;
 
     //<span class="checkmark"></span>
     var radioCheckmark = document.createElement("span");
@@ -223,6 +246,7 @@ function buildRadioManualAmount(method) {
     manualAmountRadio.name = "cashier.amount";
     manualAmountRadio.type = "radio";
     manualAmountRadio.value = method.defaultamount;
+    manualAmountRadio.required = true;
 
     //<span class="checkmark"></span>
     var manualAmountCheckmark = document.createElement("span");
@@ -246,13 +270,21 @@ function buildRadioManualAmount(method) {
     manualamountInput.value = method.defaultamount;
     manualamountInput.placeholder = method.labels.amount;
 
-    // event listener to select radio on field focus and assign input value to radio value.
+    // event listeners to select radio on field focus and assign input value to radio value.
     manualamountInput.addEventListener("click", function () {
         manualAmountRadio.checked = true;
         manualAmountRadio.value = this.value;
+        this.required = true;
     });
     manualamountInput.addEventListener("change", function () {
         manualAmountRadio.value = this.value;
+    });
+
+    // event listener to removed required from manual input if another option is selected
+    manualAmountRadio.addEventListener("change", function () {
+        if(!manualAmountRadio.checked) {
+            manualamountInput.checked = false;
+        }
     });
 
     //<p class="">Small text under the amount input</p>
@@ -294,7 +326,7 @@ function buildManualAmount(method) {
     amountLabel.innerHTML = method.labels.amount;
     amountLabel.classList = "input-label";
     amountLabel.htmlFor = "manualAmountInput";
-    
+
     //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
     var manualamountInput = document.createElement("input");
     manualamountInput.classList = "text-input amount";
@@ -369,7 +401,75 @@ function buildFullCard(method) {
 
     paymentFieldsContainer.appendChild(dateCvvRow);
 
+    //Append save data checkbox
+    paymentFieldsContainer.appendChild(buildCheckbox(method.labels.save));
+
     return paymentFieldsContainer;
+}
+
+function buildSelectSavedData(savedValues) {
+    //<div class="selectWrapper">
+    var selectWrapper = document.createElement("div");
+    selectWrapper.classList = "selectWrapper";
+
+    //<div class="select mb-8em" tabindex="1">
+    var customSelect = document.createElement("div");
+    customSelect.classList = "select mb-8em";
+    customSelect.tabIndex = 1;
+
+    for (const [key, value] of Object.entries(savedValues)) {
+        customSelect.appendChild(buildSelectorInput(value));
+        customSelect.appendChild(buildSelectLabel(key, value));
+    }
+
+    selectWrapper.appendChild(customSelect);
+    selectWrapper.appendChild(buildAddNewButton(method.labels.addNew));
+    
+    return selectWrapper;
+}
+
+function buildAddNewButton(label) {
+    //<div class="add-new">
+    var addNewContainer = document.createElement("div");
+    addNewContainer.classList = "add-new";
+
+    //<span>+</span>
+    var plusSign = document.createElement("span");
+    plusSign.innerHTML = "+";
+
+    //<p class="text-new">Use different account number</p>
+    var addNewText = document.createElement("p");
+    addNewText.innerHTML = label;
+    addNewText.classList = "text-new";
+
+    addNewContainer.appendChild(plusSign);
+    addNewContainer.appendChild(addNewText);
+
+    return addNewContainer;
+}
+
+function buildSelectorInput(value) {
+    //<input class="options-select option-input" name="selectors" type="radio" id="opt1" checked>
+    var input = document.createElement("input");
+    input.type = "radio";
+    input.id = value;
+    input.value = value;
+    input.classList = "options-select option-input";
+    input.name = "savedDataSelected";
+    input.required = true;
+
+    return input;
+}
+
+function buildSelectLabel(key, value) {
+    //<label for="opt1" class="option">
+
+    //<div class="option-content-container">
+
+    //<p>key</p>
+
+    //<div class="delete-icon">
+    //<img src="img/delete-icon.svg" />
 }
 
 //This function can be more generic
@@ -422,7 +522,7 @@ function buildCustomField(method) {
         //<input id="cashier.phoneCountryCode" name="cashier.phoneCountryCode" class="text-input phone-code" type="tel" />
         var countryCodeInput = document.createElement("input");
         countryCodeInput.type = ("tel");
-        countryCodeInput.id = "cahier.phoneCountryCode" ;
+        countryCodeInput.id = "cahier.phoneCountryCode";
         countryCodeInput.name = "cahier.phoneCountryCode";
         countryCodeInput.classList = "text-input phone-code"
         countryCodeInput.placeholder = "Code"; //TODO add localization
@@ -463,7 +563,7 @@ function buildCustomField(method) {
     }
 
     paymentFieldsContainer.appendChild(inputContainer);
-    
+
     return paymentFieldsContainer;
 }
 
