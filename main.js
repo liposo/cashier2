@@ -47,7 +47,7 @@ function buildPaymentForm(cards, cashierFormSection, method) {
 
     //append custom field
     if (Object.keys(methodData.customFieldValue).length > 0) {
-        paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue, 
+        paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue,
             paymentDataRow,
             methodData));
     } else {
@@ -63,7 +63,7 @@ function buildPaymentForm(cards, cashierFormSection, method) {
             default:
         }
     }
-    
+
     form.appendChild(paymentDataRow);
 
     // append submit form row
@@ -424,7 +424,7 @@ function buildSelectSavedData(savedValues, parent, method) {
     customSelect.tabIndex = 1;
 
     var lenght = Object.keys(savedValues).length;
-    for(var i = 0; i < lenght; i++) {
+    for (var i = 0; i < lenght; i++) {
         var key = Object.keys(savedValues)[i];
         var value = Object.values(savedValues)[i];
 
@@ -457,7 +457,22 @@ function buildAddNewButton(parent, method) {
     addNewContainer.appendChild(addNewText);
 
     addNewContainer.addEventListener('click', function () {
+        var paymentDataRow = document.querySelector(".payment-data-row");
+        var selectWrapper = document.querySelector(".select-wrapper");
+        //Remove custom select container
+        paymentDataRow.removeChild(selectWrapper);
 
+        switch (method.customfield) {
+            case "fullCard":
+                paymentDataRow.appendChild(buildFullCard(method));
+                break;
+            case "cardPan":
+            case "phone":
+            case "accountId":
+                paymentDataRow.appendChild(buildCustomField(method));
+                break;
+            default:
+        }
     });
 
     return addNewContainer;
@@ -472,7 +487,7 @@ function buildSelectorInput(key, value, position) {
     input.classList = "options-select option-input";
     input.name = "savedDataSelected";
     input.required = true;
-    if(position == 0) {
+    if (position == 0) {
         input.checked = true;
     }
 
@@ -507,7 +522,7 @@ function buildSelectLabel(key, value, input, parent, method) {
     option.appendChild(deleteWrapper);
 
     //delete event listener
-    deleteWrapper.addEventListener("click", function(){
+    deleteWrapper.addEventListener("click", function () {
         //TODO fetch delete API
 
         parent.removeChild(input);
@@ -522,8 +537,8 @@ function buildSelectLabel(key, value, input, parent, method) {
         selectedMethod.setAttribute("data-customfieldvalue", JSON.stringify(selectedMethodSavedValues));
 
         var inputs = parent.querySelectorAll("input")
-        if(inputs.length != 0) {
-            inputs[0].checked = true;    
+        if (inputs.length != 0) {
+            inputs[0].checked = true;
         } else {
             var paymentDataRow = document.querySelector(".payment-data-row");
 
@@ -691,6 +706,31 @@ function buildSubmitFormRow(method) {
         submitContainer.appendChild(pciLogo);
     }
     submitRow.appendChild(submitContainer);
+
+    //Do before submit form
+    button.onsubmit = function() {
+        return false;
+    }
+
+    button.onclick = function() {
+        var form = document.getElementById('cashierForm');
+        
+        var iframe = window !== window.parent;
+        document.querySelector('.timezone_offset').value = new Date().getTimezoneOffset();
+        document.querySelector('.screenHeight').value = screen.height;
+        document.querySelector('.screenWidth').value = screen.width;
+        document.querySelector('.isIframe').value = iframe.toString();
+        document.querySelector('.javaEnabled').value = navigator.javaEnabled();
+        document.querySelector('.screenColorDepth').value = screen.colorDepth;
+        if (iframe) {
+            document.querySelector('.domain').value = document.location.ancestorOrigins[0].replace(/^https?\:\/\//i, "");
+        }
+
+        document.querySelector(".overlay").classList.remove("hidden");
+
+        form.submit()
+    }
+
 
     return submitRow;
 }
