@@ -31,7 +31,7 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     //<div id="selectedMethod" class="method-container">
     var selectedMethod = document.createElement("div");
     selectedMethod.className = "method-container";
-    selectedMethod.id = methodData.id;
+    selectedMethod.id = "selected-" + method.id;
 
     //<form id="cashierForm" class="form-wrapper">
     var form = document.createElement("form");
@@ -49,7 +49,7 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     if (Object.keys(methodData.customFieldValue).length > 0) {
         paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue, 
             paymentDataRow,
-            methodData.labels.addNew));
+            methodData));
     } else {
         switch (methodData.customfield) {
             case "fullCard":
@@ -413,7 +413,7 @@ function buildFullCard(method) {
     return paymentFieldsContainer;
 }
 
-function buildSelectSavedData(savedValues, parent, label) {
+function buildSelectSavedData(savedValues, parent, method) {
     //<div class="selectWrapper">
     var selectWrapper = document.createElement("div");
     selectWrapper.classList = "select-wrapper";
@@ -428,20 +428,18 @@ function buildSelectSavedData(savedValues, parent, label) {
         var key = Object.keys(savedValues)[i];
         var value = Object.values(savedValues)[i];
 
-        console.log(key + " : " + value);
-
         var selectOption = buildSelectorInput(key, value, i);
         customSelect.appendChild(selectOption);
-        customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect));
+        customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect, method));
     }
 
     selectWrapper.appendChild(customSelect);
-    selectWrapper.appendChild(buildAddNewButton(label, parent));
+    selectWrapper.appendChild(buildAddNewButton(parent, method));
 
     return selectWrapper;
 }
 
-function buildAddNewButton(label) {
+function buildAddNewButton(parent, method) {
     //<div class="add-new">
     var addNewContainer = document.createElement("div");
     addNewContainer.classList = "add-new";
@@ -452,7 +450,7 @@ function buildAddNewButton(label) {
 
     //<p class="text-new">Use different account number</p>
     var addNewText = document.createElement("p");
-    addNewText.innerHTML = label;
+    addNewText.innerHTML = method.labels.addNew;
     addNewText.classList = "text-new";
 
     addNewContainer.appendChild(plusSign);
@@ -481,7 +479,7 @@ function buildSelectorInput(key, value, position) {
     return input;
 }
 
-function buildSelectLabel(key, value, input, parent) {
+function buildSelectLabel(key, value, input, parent, method) {
     //<label for="opt1" class="option">
     var optionLabel = document.createElement("label");
     optionLabel.classList = "option";
@@ -511,18 +509,38 @@ function buildSelectLabel(key, value, input, parent) {
     //delete event listener
     deleteWrapper.addEventListener("click", function(){
         //TODO fetch delete API
-        console.log(parent);
-        console.log(optionLabel);
+
         parent.removeChild(input);
         parent.removeChild(optionLabel);
 
-        switch(parent.childElementCount) {
-            case 1:
-                parent.firstChild.checked = true;
-                break;
-            case 0: 
-                console.log("Replace with Data inputs");
-                break;
+        //TODO remove value from savedValues
+        var selectedMethodSavedValues = method.customFieldValue;
+        delete selectedMethodSavedValues[key];
+
+        //re-write data attribute with removed value
+        var selectedMethod = document.getElementById(method.id);
+        selectedMethod.setAttribute("data-customfieldvalue", JSON.stringify(selectedMethodSavedValues));
+
+        var inputs = parent.querySelectorAll("input")
+        if(inputs.length != 0) {
+            inputs[0].checked = true;    
+        } else {
+            var paymentDataRow = document.querySelector(".payment-data-row");
+
+            //Remove custom select container
+            paymentDataRow.removeChild(parent.parentElement);
+
+            switch (method.customfield) {
+                case "fullCard":
+                    paymentDataRow.appendChild(buildFullCard(method));
+                    break;
+                case "cardPan":
+                case "phone":
+                case "accountId":
+                    paymentDataRow.appendChild(buildCustomField(method));
+                    break;
+                default:
+            }
         }
     });
 
@@ -679,6 +697,7 @@ function buildSubmitFormRow(method) {
 
 function getMethodData(method) {
     return mathodData = {
+        id: method.id,
         method: method.getAttribute('data-method'),
         selected: method.getAttribute('data-selected'),
         amount: method.getAttribute('data-amount'),
