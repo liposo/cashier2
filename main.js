@@ -13,6 +13,11 @@ window.addEventListener("load", function () {
 
             buildPaymentForm(cards, cashierFormSection, this);
 
+            //Get and update geolocation if available 
+            var latitude = document.querySelector(".latitude");
+            var longitude = document.querySelector(".longitude");
+            updateCoordinates(latitude, longitude);
+
             for (var i = 0; i < cards.length; i++) {
                 cards[i].classList.add("card-small");
                 cards[i].style.display = 'flex';
@@ -70,19 +75,26 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     form.appendChild(buildSubmitFormRow(methodData));
 
     // add hidden inputs
+    var iframe = window !== window.parent;
+    var domain;
+
+    if (iframe) {
+        domain = document.location.ancestorOrigins[0].replace(/^https?\:\/\//i, "");
+    }
+
     form.appendChild(buildHiddenInput("paymentMethod", "", methodData.method));
     form.appendChild(buildHiddenInput("customPaymentMethod", "", methodData.custompaymentmethod));
     form.appendChild(buildHiddenInput("currency", "", methodData.currency));
     form.appendChild(buildHiddenInput("_csrf", "", methodData.token));
-    form.appendChild(buildHiddenInput("_screenHeight", "screenHeight", ""));
-    form.appendChild(buildHiddenInput("_screenWidth", "screenWidth", ""));
-    form.appendChild(buildHiddenInput("_timezone_offset", "timezone_offset", ""));
+    form.appendChild(buildHiddenInput("_screenHeight", "screenHeight", screen.height));
+    form.appendChild(buildHiddenInput("_screenWidth", "screenWidth", screen.width));
+    form.appendChild(buildHiddenInput("_timezone_offset", "timezone_offset", new Date().getTimezoneOffset()));
     form.appendChild(buildHiddenInput("_latitude", "latitude", ""));
     form.appendChild(buildHiddenInput("_longitude", "longitude", ""));
-    form.appendChild(buildHiddenInput("_isIframe", "isIframe", ""));
-    form.appendChild(buildHiddenInput("_domain", "domain", ""));
-    form.appendChild(buildHiddenInput("_isJavaEnabled", "javaEnabled", ""));
-    form.appendChild(buildHiddenInput("_screenColorDepth", "screenColorDepth", ""));
+    form.appendChild(buildHiddenInput("_isIframe", "isIframe", iframe.toString()));
+    form.appendChild(buildHiddenInput("_domain", "domain", domain));
+    form.appendChild(buildHiddenInput("_isJavaEnabled", "javaEnabled", navigator.javaEnabled()));
+    form.appendChild(buildHiddenInput("_screenColorDepth", "screenColorDepth", screen.colorDepth));
 
     selectedMethod.appendChild(form);
     cashierFormSection.appendChild(selectedMethod);
@@ -115,10 +127,9 @@ function buildHiddenInput(name, className, value) {
     if (className.length > 0) {
         hiddenInput.classList.add(className);
     }
-    if (value.length > 0) {
+    if (value != undefined) {
         hiddenInput.value = value;
     }
-
 
     return hiddenInput;
 }
@@ -708,29 +719,10 @@ function buildSubmitFormRow(method) {
     submitRow.appendChild(submitContainer);
 
     //Do before submit form
-    button.onsubmit = function() {
-        return false;
+    button.onsubmit = function () {
+        button.disabled = true;
+        return true;
     }
-
-    button.onclick = function() {
-        var form = document.getElementById('cashierForm');
-        
-        var iframe = window !== window.parent;
-        document.querySelector('.timezone_offset').value = new Date().getTimezoneOffset();
-        document.querySelector('.screenHeight').value = screen.height;
-        document.querySelector('.screenWidth').value = screen.width;
-        document.querySelector('.isIframe').value = iframe.toString();
-        document.querySelector('.javaEnabled').value = navigator.javaEnabled();
-        document.querySelector('.screenColorDepth').value = screen.colorDepth;
-        if (iframe) {
-            document.querySelector('.domain').value = document.location.ancestorOrigins[0].replace(/^https?\:\/\//i, "");
-        }
-
-        document.querySelector(".overlay").classList.remove("hidden");
-
-        form.submit()
-    }
-
 
     return submitRow;
 }
@@ -784,5 +776,16 @@ function isCardValid(element) {
         element.classList.remove('has-error');
     } else {
         element.classList.add('has-error');
+    }
+}
+
+function updateCoordinates(latitude, longitude) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            latitude.value = position.coords.latitude;
+            longitude.value = position.coords.longitude;
+        });
+    } else {
+        console.error("No support for geolocation api");
     }
 }
