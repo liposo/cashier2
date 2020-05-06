@@ -372,6 +372,7 @@ html {
   flex-direction: column;
   flex: 0.6;
   align-items: center;
+  margin-top: 1.2em;
 }
 
 .submit-button {
@@ -403,9 +404,7 @@ html {
 }
 
 .add-new {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex;
 }
 
 .add-new:hover {

@@ -1,5 +1,4 @@
 window.addEventListener("load", function () {
-    console.log("Document loaded!")
     var cards = document.querySelectorAll(".card");
     var cashierFormSection = document.getElementById("cashierPaymentForm");
     var methodContainer = document.getElementById("methodsContainer");
@@ -31,7 +30,7 @@ window.addEventListener("load", function () {
 
 function buildPaymentForm(cards, cashierFormSection, method) {
     var methodData = getMethodData(method);
-    console.log(methodData);
+    //console.log(methodData);
 
     //<div id="selectedMethod" class="method-container">
     var selectedMethod = document.createElement("div");
@@ -51,7 +50,8 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     paymentDataRow.classList = "payment-data-row";
 
     //append custom field
-    if (Object.keys(methodData.customFieldValue).length > 0) {
+    var hasSavedValues = Object.keys(methodData.customFieldValue).length > 0;
+    if (hasSavedValues) {
         paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue,
             paymentDataRow,
             methodData));
@@ -108,6 +108,10 @@ function buildPaymentForm(cards, cashierFormSection, method) {
         });
     }
 
+    applyCleaveToCardFields();
+};
+
+function applyCleaveToCardFields() {
     var cardPanField = document.querySelector(".cardPan");
     if (cardPanField) {
         new Cleave('.cardPan', {
@@ -135,8 +139,7 @@ function buildPaymentForm(cards, cashierFormSection, method) {
             delimiter: ''
         });
     }
-
-};
+}
 
 function buildHiddenInput(name, className, value) {
     var hiddenInput = document.createElement("input");
@@ -212,9 +215,7 @@ function buildAmount(method) {
     if (method.predefinedamounts) {
         amountContainerDiv.appendChild(buildPredefinedAmounts(method));
         amountContainerDiv.appendChild(buildRadioManualAmount(method));
-
     } else if (method.amount.length <= 0) {
-        console.log(method.amount.length);
         amountContainerDiv.appendChild(buildManualAmount(method));
     }
 
@@ -425,6 +426,11 @@ function buildFullCard(method) {
     //Append save data checkbox
     paymentFieldsContainer.appendChild(buildCheckbox(method.labels.save));
 
+    var hasSavedValues = Object.keys(method.customFieldValue).length > 0;
+    if(hasSavedValues) {
+        paymentFieldsContainer.appendChild(builBackToSavedValues(method));
+    }
+
     return paymentFieldsContainer;
 }
 
@@ -449,12 +455,12 @@ function buildSelectSavedData(savedValues, parent, method) {
     }
 
     selectWrapper.appendChild(customSelect);
-    selectWrapper.appendChild(buildAddNewButton(parent, method));
+    selectWrapper.appendChild(buildAddNewButton(method));
 
     return selectWrapper;
 }
 
-function buildAddNewButton(parent, method) {
+function buildAddNewButton(method) {
     //<div class="add-new">
     var addNewContainer = document.createElement("div");
     addNewContainer.classList = "add-new";
@@ -474,9 +480,12 @@ function buildAddNewButton(parent, method) {
     addNewContainer.addEventListener('click', function () {
         var paymentDataRow = document.querySelector(".payment-data-row");
         var selectWrapper = document.querySelector(".select-wrapper");
+        
+
         //Remove custom select container
         paymentDataRow.removeChild(selectWrapper);
 
+        //Add form fields
         switch (method.customfield) {
             case "fullCard":
                 paymentDataRow.appendChild(buildFullCard(method));
@@ -488,9 +497,38 @@ function buildAddNewButton(parent, method) {
                 break;
             default:
         }
-    });
+
+        applyCleaveToCardFields();
+    }); 
 
     return addNewContainer;
+}
+
+function builBackToSavedValues(method) {
+    //<div class="back">
+    var backContainer = document.createElement("div");
+    backContainer.classList = "add-new";
+
+    //<p class="text-new">Back</p>
+    var backText = document.createElement("p");
+    backText.innerHTML = method.labels.back;
+    backText.classList = "text-new";
+
+    backContainer.appendChild(backText);
+
+    backContainer.addEventListener('click', function () {
+        var paymentDataRow = document.querySelector(".payment-data-row");
+        var paymentData = document.querySelector(".payment-data-fields-container");
+
+        //Remove custom select container
+        paymentDataRow.removeChild(paymentData);
+
+        paymentDataRow.appendChild(buildSelectSavedData(method.customFieldValue,
+            paymentDataRow,
+            method));
+    }); 
+
+    return backContainer;
 }
 
 function buildSelectorInput(key, value, position) {
@@ -543,11 +581,11 @@ function buildSelectLabel(key, value, input, parent, method) {
         parent.removeChild(input);
         parent.removeChild(optionLabel);
 
-        //TODO remove value from savedValues
+        //remove value from savedValues
         var selectedMethodSavedValues = method.customFieldValue;
         delete selectedMethodSavedValues[key];
 
-        //re-write data attribute with removed value
+        //re-write data-attribute with removed value
         var selectedMethod = document.getElementById(method.id);
         selectedMethod.setAttribute("data-customfieldvalue", JSON.stringify(selectedMethodSavedValues));
 
@@ -579,7 +617,6 @@ function buildSelectLabel(key, value, input, parent, method) {
     return optionLabel;
 }
 
-//This function can be more generic
 function buildFullCardInput(containerClass, inputName, inputClass, label, placeholder) {
     //<div class="input-container">
     var inputContainer = document.createElement("div");
@@ -606,10 +643,6 @@ function buildFullCardInput(containerClass, inputName, inputClass, label, placeh
         input.pattern = "[0-9]{3,4}";
         input.maxLength = "4";
         input.minLength = "3";
-
-        input.addEventListener("change", function () {
-            input.value = input.value.replace("/[^0-9]/g", '').replace("/(\..*)\./g", '$1');
-        });
     }
 
     inputContainer.appendChild(inputLabel);
@@ -686,6 +719,11 @@ function buildCustomField(method) {
     }
 
     paymentFieldsContainer.appendChild(inputContainer);
+
+    var hasSavedValues = Object.keys(method.customFieldValue).length > 0;
+    if(hasSavedValues) {
+        paymentFieldsContainer.appendChild(builBackToSavedValues(method));
+    }
 
     return paymentFieldsContainer;
 }
