@@ -40,7 +40,7 @@ html {
   margin: auto;
   min-width: 320px !important;
   max-width: 990px !important;
-  height: 100vh;
+  height: 100%;
 }
 
 .flex-container {
@@ -154,7 +154,7 @@ html {
 .small-input-wapper {
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 49%;
 }
 
 .text-input {
@@ -270,7 +270,7 @@ html {
 }
 
 .radio-container input:checked~.checkmark {
-  background-color: #2196F3;
+  background-color: #eb595c;
 }
 
 .checkmark:after {

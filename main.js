@@ -118,6 +118,24 @@ function buildPaymentForm(cards, cashierFormSection, method) {
             isCardValid(cardPanField);
         });
     }
+
+    var cardExpiryDate = document.querySelector(".expiry-date");
+    if (cardExpiryDate) {
+        new Cleave('.expiry-date', {
+            date: true,
+            datePattern: ['m', 'y']
+        });
+    }
+
+    var cardCvv = document.querySelector(".cvv");
+    if (cardCvv) {
+        new Cleave('.cvv', {
+            numeral: true,
+            numeralDecimalMark: '',
+            delimiter: ''
+        });
+    }
+
 };
 
 function buildHiddenInput(name, className, value) {
@@ -370,51 +388,37 @@ function buildFullCard(method) {
     var paymentFieldsContainer = document.createElement("div");
     paymentFieldsContainer.classList = "payment-data-fields-container";
 
-    paymentFieldsContainer.appendChild(buildInput("input-container",
+    paymentFieldsContainer.appendChild(buildFullCardInput("input-container",
         "card.number",
-        "text-input cardPan",
+        "cardPan",
         method.fullcardlabels.pan != undefined ? method.fullcardlabels.pan : "Card Number",
-        "input-label",
-        method.fullcardplaceholder.pan != undefined ? method.fullcardplaceholder.pan : "Card Number",
-        method
+        method.fullcardplaceholder.pan != undefined ? method.fullcardplaceholder.pan : "Card Number"
     ));
 
-    paymentFieldsContainer.appendChild(buildInput("input-container",
+    paymentFieldsContainer.appendChild(buildFullCardInput("input-container",
         "card.holder",
-        "text-input",
+        "holder",
         method.fullcardlabels.holder != undefined ? method.fullcardlabels.holder : "Holder Name",
-        "input-label",
-        method.fullcardplaceholder.holder != undefined ? method.fullcardplaceholder.holder : "Holder Name",
-        method
+        method.fullcardplaceholder.holder != undefined ? method.fullcardplaceholder.holder : "Holder Name"
     ));
 
     //<div class="date-cvv">
     var dateCvvRow = document.createElement("div");
     dateCvvRow.classList = "date-cvv";
 
-    dateCvvRow.appendChild(buildInput("small-input-wapper",
-        "card.expiryMonth",
-        "text-input",
-        method.fullcardlabels.expiryMonth != undefined ? method.fullcardlabels.expiryMonth : "EXP/MM",
-        "input-label",
-        method.fullcardplaceholder.expiryMonth != undefined ? method.fullcardplaceholder.expiryMonth : "MM",
-        method));
+    dateCvvRow.appendChild(buildFullCardInput("small-input-wapper",
+        "card.expiryDate",
+        "expiry-date",
+        method.fullcardlabels.expiryMonth != undefined ? method.fullcardlabels.expiryMonth : "Expiry Date",
+        method.fullcardplaceholder.expiryMonth != undefined ? method.fullcardplaceholder.expiryMonth : "MM/YY"
+    ));
 
-    dateCvvRow.appendChild(buildInput("small-input-wapper",
-        "card.expiryYear",
-        "text-input",
-        method.fullcardlabels.expiryYear != undefined ? method.fullcardlabels.expiryYear : "EXP/YY",
-        "input-label",
-        method.fullcardplaceholder.expiryYear != undefined ? method.fullcardplaceholder.expiryYear : "YY",
-        method));
-
-    dateCvvRow.appendChild(buildInput("small-input-wapper",
+    dateCvvRow.appendChild(buildFullCardInput("small-input-wapper",
         "card.cvv",
-        "text-input",
+        "cvv",
         method.fullcardlabels.cvv != undefined ? method.fullcardlabels.cvv : "CVV2/CVC",
-        "input-label",
-        method.fullcardplaceholder.cvv != undefined ? method.fullcardplaceholder.cvv : "CVV2/CVC",
-        method));
+        method.fullcardplaceholder.cvv != undefined ? method.fullcardplaceholder.cvv : "CVV2/CVC"
+    ));
 
     paymentFieldsContainer.appendChild(dateCvvRow);
 
@@ -576,7 +580,7 @@ function buildSelectLabel(key, value, input, parent, method) {
 }
 
 //This function can be more generic
-function buildInput(containerClass, inputName, inputClass, label, labelClass, placeholder, method) {
+function buildFullCardInput(containerClass, inputName, inputClass, label, placeholder) {
     //<div class="input-container">
     var inputContainer = document.createElement("div");
     inputContainer.classList = containerClass;
@@ -584,17 +588,29 @@ function buildInput(containerClass, inputName, inputClass, label, labelClass, pl
     //<label for="card.number" class="input-label">Card number</label>
     var inputLabel = document.createElement("label");
     inputLabel.htmlFor = inputName;
-    inputLabel.classList = labelClass
+    inputLabel.classList = "input-label";
     inputLabel.innerHTML = label;
 
     //<input id="card.number" name="card.number" class="text-input has-error" type="text" placeholder="Card Number" />
     var input = document.createElement("input");
-    input.type = ("text");
+    input.type = "text";
     input.id = inputName;
     input.name = inputName;
-    input.classList = inputClass;
+    input.classList = "text-input " + inputClass;
     input.placeholder = placeholder;
     input.required = true;
+    input.autocomplete = "none";
+
+    if (inputName == "card.cvv") {
+        input.type = "password";
+        input.pattern = "[0-9]{3,4}";
+        input.maxLength = "4";
+        input.minLength = "3";
+
+        input.addEventListener("change", function () {
+            input.value = input.value.replace("/[^0-9]/g", '').replace("/(\..*)\./g", '$1');
+        });
+    }
 
     inputContainer.appendChild(inputLabel);
     inputContainer.appendChild(input);
@@ -628,8 +644,9 @@ function buildCustomField(method) {
         countryCodeInput.id = "cahier.phoneCountryCode";
         countryCodeInput.name = "cahier.phoneCountryCode";
         countryCodeInput.classList = "text-input phone-code"
-        countryCodeInput.placeholder = "Code"; //TODO add localization
+        countryCodeInput.placeholder = method.labels.countryCode != undefined ? method.labels.countryCode : "Code";
         countryCodeInput.required = true;
+        countryCodeInput.maxLength = 5;
 
         //<input id="cashier.phone" name="cashier.number" class="text-input phone" type="tel" placeholder="" />
         var phoneInput = document.createElement("input");
@@ -639,6 +656,7 @@ function buildCustomField(method) {
         phoneInput.classList = "text-input " + method.customfield;
         phoneInput.placeholder = method.customfieldplaceholder;
         phoneInput.required = true;
+
 
         phoneWrapper.appendChild(countryCodeInput);
         phoneWrapper.appendChild(phoneInput);
@@ -659,7 +677,9 @@ function buildCustomField(method) {
         input.name = "cahier." + method.customfield;
         input.classList = "text-input " + method.customfield;
         input.placeholder = method.customfieldplaceholder;
+        input.pattern = method.customfieldregex;
         input.required = true;
+        input.title = method.customFieldValidationMsg;
 
         inputContainer.appendChild(inputLabel);
         inputContainer.appendChild(input);
@@ -750,6 +770,7 @@ function getMethodData(method) {
         customfieldplaceholder: method.getAttribute("data-customfieldplaceholder"),
         customfieldlabel: method.getAttribute("data-customfieldlabel"),
         customfieldregex: method.getAttribute("data-customfieldregex"),
+        customFieldValidationMsg: method.getAttribute("data-customfieldtitle"),
         token: method.getAttribute("data-token")
     }
 }
