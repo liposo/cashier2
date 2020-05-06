@@ -284,6 +284,7 @@ function buildRadioManualAmount(method) {
     manualAmountRadio.type = "radio";
     manualAmountRadio.value = method.defaultamount;
     manualAmountRadio.required = true;
+    manualAmountRadio.checked = true;
 
     //<span class="checkmark"></span>
     var manualAmountCheckmark = document.createElement("span");
