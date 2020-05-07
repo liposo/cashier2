@@ -527,11 +527,11 @@ html {
 }
 
 .phone-code {
-  flex: 1;
+  width: 20%;
 }
 
 .phone {
-  flex: 5;
+  width: 80%;
 }
 
 /* MARGINS */
