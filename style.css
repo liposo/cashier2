@@ -124,6 +124,7 @@ html {
   justify-content: flex-start;
   align-items: center;
   flex: 1;
+  margin-bottom: 1em;
 }
 
 .payment-data-row {
@@ -234,7 +235,7 @@ html {
 .radio-container {
   display: block;
   position: relative;
-  padding-left: 2em;
+  padding-left: 1.7em;
   margin-bottom: 1.3em;
   cursor: pointer;
   font-size: 1.2em;
@@ -539,6 +540,18 @@ html {
 }
 
 /* MEDIA QUERRY */
+
+/* MAX 370px */
+@media only screen and (max-width: 370px) {
+  .predefined-amount-row {
+    flex-direction: column;
+  }
+
+  .predefined-amount-row label {
+    margin-bottom: 1em;
+  }
+}
+
 /* MAX 600px */
 @media only screen and (max-width: 600px) {
   .card {
@@ -558,6 +571,30 @@ html {
 
   .card:hover {
     transform: none;
+  }
+
+  .select-wrapper {
+    flex: 1;
+  }
+
+  .payment-data-fields-container {
+    flex: 1;
+  }
+
+  .submit-container {
+    flex: 1;
+  }
+
+  .submit-row {
+    justify-content: center;
+  }
+
+  .logo-amount-row {
+    flex-direction: column;
+  }
+
+  .amount-container {
+    width: 100%;
   }
 }
 
