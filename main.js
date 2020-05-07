@@ -558,10 +558,15 @@ function buildSelectLabel(key, value, input, parent, method) {
     var option = document.createElement("div");
     option.classList = "option-content-container";
 
-    //<p>key</p>
+    //<p>value</p>
     var optionText = document.createElement("p");
-    optionText.innerHTML = value;
-
+    if(method.customfield == "phone") {
+        var phoneNumber = value.split(":");
+        optionText.innerHTML = "(" + phoneNumber[0] + ") " + phoneNumber[1];
+    } else {
+        optionText.innerHTML = value;
+    }
+    
     //<div class="delete-icon">
     var deleteWrapper = document.createElement("div");
     deleteWrapper.classList = "delete-icon";
