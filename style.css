@@ -77,7 +77,7 @@ html {
 }
 
 .card-small {
-  height: 60%;
+  height: 75px !important; 
   margin: 5px;
   transition: all .1s ease-in-out;
 }
@@ -588,6 +588,10 @@ html {
     margin-top: 0.5em;
   }
 
+  .card-small {
+    height: 60px !important;
+}
+
 }
 
 /* MAX 600px */
@@ -598,12 +602,7 @@ html {
     transition: none;
   }
 
-  .card-small {
-    height: 55%;
-  }
-
   .card-small img {
-    width: 60%;
     margin: 1em;
   }
 
@@ -642,14 +641,6 @@ html {
     width: 28%;
     height: 30%;
     transition: none;
-  }
-
-  .card-small {
-    height: 65%;
-  }
-
-  .card-small img {
-    width: 75px;
   }
 
   .card:hover {
