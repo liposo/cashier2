@@ -19,6 +19,10 @@ html {
   font-family: NunitoSans, sans-serif;
 }
 
+body {
+  overflow: scroll;
+}
+
 .overlay {
   position: fixed;
   left: 0;
