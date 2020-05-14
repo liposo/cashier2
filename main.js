@@ -435,6 +435,7 @@ function buildSelectSavedData(savedValues, parent, method) {
     //<div class="selectWrapper">
     let selectWrapper = document.createElement("div");
     selectWrapper.className = "select-wrapper";
+    selectWrapper.id = "selectWrapper";
 
     //<div class="select mb-8em" tabindex="1">
     let customSelect = document.createElement("div");
@@ -449,7 +450,7 @@ function buildSelectSavedData(savedValues, parent, method) {
 
         let selectOption = buildSelectorInput(key, value, i);
         customSelect.appendChild(selectOption);
-        customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect, method));
+        customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect, method, selectWrapper));
     }
 
     if (method.customfield == "fullCard") {
@@ -575,7 +576,7 @@ function buildSelectorInput(key, value, position) {
     return input;
 }
 
-function buildSelectLabel(key, value, input, parent, method) {
+function buildSelectLabel(key, value, input, parent, method, selectWrapper) {
     //<label for="opt1" class="option">
     let optionLabel = document.createElement("label");
     optionLabel.className = "option";
@@ -629,7 +630,7 @@ function buildSelectLabel(key, value, input, parent, method) {
             let paymentDataRow = document.querySelector(".payment-data-row");
 
             //Remove custom select container
-            paymentDataRow.removeChild(parent.parentElement);
+            paymentDataRow.removeChild(selectWrapper);
 
             switch (method.customfield) {
                 case "fullCard":
