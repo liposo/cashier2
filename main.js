@@ -2,20 +2,26 @@ window.addEventListener("load", function () {
     var cards = document.querySelectorAll(".card");
     var cashierFormSection = document.getElementById("cashierPaymentForm");
     var methodContainer = document.getElementById("methodsContainer");
+    var form = document.getElementById("cashierForm");
+
+    //Get and update geolocation if available 
+    var latitude = document.querySelector(".latitude");
+    var longitude = document.querySelector(".longitude");
+    updateCoordinates(latitude, longitude);
 
     for (var i = 0; i < cards.length; i++) {
         cards[i].addEventListener('click', function () {
-
-            methodContainer.classList = "scrolling-wrapper";
-
-            cashierFormSection.removeChild(cashierFormSection.firstChild);
-
-            buildPaymentForm(cards, cashierFormSection, this);
-
-            //Get and update geolocation if available 
-            var latitude = document.querySelector(".latitude");
-            var longitude = document.querySelector(".longitude");
-            updateCoordinates(latitude, longitude);
+            var methodData = getMethodData(this);
+            
+            methodContainer.className = "scrolling-wrapper";
+            
+            var currentMethod = document.querySelector('[id^="selected-"]');
+            if(currentMethod) {
+                form.removeChild(currentMethod);  
+            }
+            
+            form.appendChild(buildPaymentFormFields(cards, cashierFormSection, methodData));
+            form.classList.add("method-container");
 
             for (var i = 0; i < cards.length; i++) {
                 cards[i].classList.add("card-small");
@@ -28,22 +34,14 @@ window.addEventListener("load", function () {
     }
 });
 
-function buildPaymentForm(cards, cashierFormSection, method) {
-    var methodData = getMethodData(method);
-    //console.log(methodData);
-
-    //<div id="selectedMethod" class="method-container">
+function buildPaymentFormFields(cards, cashierFormSection, methodData) {
+    //<div id="selectedMethod" class="form-wrapper">
     var selectedMethod = document.createElement("div");
-    selectedMethod.className = "method-container";
-    selectedMethod.id = "selected-" + method.id;
-
-    //<form id="cashierForm" class="form-wrapper">
-    var form = document.createElement("form");
-    form.id = "cashierForm";
-    form.classList = "form-wrapper";
+    selectedMethod.className = "form-wrapper";
+    selectedMethod.id = "selected-" + methodData.id;
 
     // append logo and amount row
-    form.appendChild(buildLogoAmountRow(methodData));
+    selectedMethod.appendChild(buildLogoAmountRow(methodData));
 
     //<div class="payment-data-row">
     var paymentDataRow = document.createElement("div");
@@ -69,10 +67,10 @@ function buildPaymentForm(cards, cashierFormSection, method) {
         }
     }
 
-    form.appendChild(paymentDataRow);
+    selectedMethod.appendChild(paymentDataRow);
 
     // append submit form row
-    form.appendChild(buildSubmitFormRow(methodData));
+    selectedMethod.appendChild(buildSubmitFormRow(methodData));
 
     // add hidden inputs
     var iframe = window !== window.parent;
@@ -82,21 +80,17 @@ function buildPaymentForm(cards, cashierFormSection, method) {
         domain = document.location.ancestorOrigins[0].replace(/^https?\:\/\//i, "");
     }
 
-    form.appendChild(buildHiddenInput("paymentMethod", "", methodData.method));
-    form.appendChild(buildHiddenInput("customPaymentMethod", "", methodData.custompaymentmethod));
-    form.appendChild(buildHiddenInput("currency", "", methodData.currency));
-    form.appendChild(buildHiddenInput("_csrf", "", methodData.token));
-    form.appendChild(buildHiddenInput("_screenHeight", "screenHeight", screen.height));
-    form.appendChild(buildHiddenInput("_screenWidth", "screenWidth", screen.width));
-    form.appendChild(buildHiddenInput("_timezone_offset", "timezone_offset", new Date().getTimezoneOffset()));
-    form.appendChild(buildHiddenInput("_latitude", "latitude", ""));
-    form.appendChild(buildHiddenInput("_longitude", "longitude", ""));
-    form.appendChild(buildHiddenInput("_isIframe", "isIframe", iframe.toString()));
-    form.appendChild(buildHiddenInput("_domain", "domain", domain));
-    form.appendChild(buildHiddenInput("_isJavaEnabled", "javaEnabled", navigator.javaEnabled()));
-    form.appendChild(buildHiddenInput("_screenColorDepth", "screenColorDepth", screen.colorDepth));
+    selectedMethod.appendChild(buildHiddenInput("paymentMethod", "", methodData.method));
+    selectedMethod.appendChild(buildHiddenInput("customPaymentMethod", "", methodData.custompaymentmethod));
+    selectedMethod.appendChild(buildHiddenInput("currency", "", methodData.currency));
+    selectedMethod.appendChild(buildHiddenInput("_screenHeight", "screenHeight", screen.height));
+    selectedMethod.appendChild(buildHiddenInput("_screenWidth", "screenWidth", screen.width));
+    selectedMethod.appendChild(buildHiddenInput("_timezone_offset", "timezone_offset", new Date().getTimezoneOffset()));
+    selectedMethod.appendChild(buildHiddenInput("_isIframe", "isIframe", iframe.toString()));
+    selectedMethod.appendChild(buildHiddenInput("_domain", "domain", domain));
+    selectedMethod.appendChild(buildHiddenInput("_isJavaEnabled", "javaEnabled", navigator.javaEnabled()));
+    selectedMethod.appendChild(buildHiddenInput("_screenColorDepth", "screenColorDepth", screen.colorDepth));
 
-    selectedMethod.appendChild(form);
     cashierFormSection.appendChild(selectedMethod);
 
     // CleaveJS
@@ -109,6 +103,8 @@ function buildPaymentForm(cards, cashierFormSection, method) {
     }
 
     applyCleaveToCardFields();
+
+    return selectedMethod;
 };
 
 function applyCleaveToCardFields() {
@@ -165,7 +161,7 @@ function buildCheckbox(label) {
     var checkboxInput = document.createElement("input");
     checkboxInput.type = "checkbox";
     checkboxInput.id = "saveData";
-    checkboxContainer.name = "saveData";
+    checkboxInput.name = "saveData";
 
     //<span class="checkbox-mark">
     var mark = document.createElement("span");
@@ -455,8 +451,6 @@ function buildSelectSavedData(savedValues, parent, method) {
         customSelect.appendChild(selectOption);
         customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect, method));
     }
-
-    console.log(method);
 
     if (method.customfield == "fullCard") {
         customSelect.classList.add("with-cvv");
@@ -880,9 +874,14 @@ function isCardValid(element) {
 function updateCoordinates(latitude, longitude) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            latitude.value = position.coords.latitude;
-            longitude.value = position.coords.longitude;
-        });
+                console.log("Got geolocation: " + position.coords.latitude + ", " + position.coords.longitude)
+                latitude.value = position.coords.latitude;
+                longitude.value = position.coords.longitude;
+            },
+            function () {
+                console.log("Something went wrong");
+            }
+        );
     } else {
         console.error("No support for geolocation api");
     }
