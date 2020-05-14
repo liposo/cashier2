@@ -72,6 +72,7 @@ html {
 
 .card img {
   width: 55%;
+  height: auto;
   margin: 1em;
 }
 
@@ -86,7 +87,9 @@ html {
 }
 
 .card-small img {
-  width: 90%;
+  width: 100%;
+  max-width: 64px;
+  height: auto;
 }
 
 .scrolling-wrapper {
@@ -125,6 +128,10 @@ html {
   align-items: center;
   flex: 1;
   margin-bottom: 1em;
+}
+
+.form-logo small {
+  margin-top: 0.5em;
 }
 
 .payment-data-row {
@@ -406,6 +413,7 @@ html {
 
 .add-new {
   display: inline-flex;
+  margin-top: 1em;
 }
 
 .add-new:hover {
@@ -522,6 +530,17 @@ html {
 /* [END] SELECT ARROW */
 /* [END] CUSTOM SELECT ELEMENT */
 
+.select-cvv-container {
+  width: 80%;
+  margin-right: 0.8em;
+}
+
+.select-cvv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .phone-wrapper {
   display: flex;
 }
@@ -550,6 +569,25 @@ html {
   .predefined-amount-row label {
     margin-bottom: 1em;
   }
+}
+
+/* MAX 420px */
+@media only screen and (max-width: 420px) {
+  .select-cvv {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .select-cvv-container {
+    width: 100%;
+    margin: 0;
+  }
+
+  .wrappable {
+    width: 100%;
+    margin-top: 0.5em;
+  }
+
 }
 
 /* MAX 600px */

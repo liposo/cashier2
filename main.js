@@ -428,7 +428,7 @@ function buildFullCard(method) {
     paymentFieldsContainer.appendChild(buildCheckbox(method.labels.save));
 
     var hasSavedValues = Object.keys(method.customFieldValue).length > 0;
-    if(hasSavedValues) {
+    if (hasSavedValues) {
         paymentFieldsContainer.appendChild(builBackToSavedValues(method));
     }
 
@@ -438,12 +438,13 @@ function buildFullCard(method) {
 function buildSelectSavedData(savedValues, parent, method) {
     //<div class="selectWrapper">
     var selectWrapper = document.createElement("div");
-    selectWrapper.classList = "select-wrapper";
+    selectWrapper.className = "select-wrapper";
 
     //<div class="select mb-8em" tabindex="1">
     var customSelect = document.createElement("div");
-    customSelect.classList = "select mb-8em";
+    customSelect.className = "select";
     customSelect.tabIndex = 1;
+    customSelect.id = "selector";
 
     var lenght = Object.keys(savedValues).length;
     for (var i = 0; i < lenght; i++) {
@@ -453,6 +454,38 @@ function buildSelectSavedData(savedValues, parent, method) {
         var selectOption = buildSelectorInput(key, value, i);
         customSelect.appendChild(selectOption);
         customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect, method));
+    }
+
+    console.log(method);
+
+    if (method.customfield == "fullCard") {
+        customSelect.classList.add("with-cvv");
+
+        var fieldsContainer = document.createElement("div");
+        fieldsContainer.className = "select-cvv";
+
+        //Label and custom select
+        var customSelectorContainer = document.createElement("div");
+        customSelectorContainer.className = "select-cvv-container";
+
+        var label = document.createElement("p");
+        label.className = "input-label";
+        label.innerHTML = method.labels.select;
+
+        customSelectorContainer.appendChild(label);
+        customSelectorContainer.appendChild(customSelect)
+
+        fieldsContainer.appendChild(customSelectorContainer);
+        fieldsContainer.appendChild(buildFullCardInput("small-input-wapper wrappable",
+            "card.cvv",
+            "cvv",
+            method.fullcardlabels.cvv != undefined ? method.fullcardlabels.cvv : "CVV2/CVC",
+            method.fullcardplaceholder.cvv != undefined ? method.fullcardplaceholder.cvv : "CVV2/CVC"));
+
+        selectWrapper.appendChild(fieldsContainer);
+        selectWrapper.appendChild(buildAddNewButton(method));
+
+        return selectWrapper;
     }
 
     selectWrapper.appendChild(customSelect);
@@ -481,7 +514,7 @@ function buildAddNewButton(method) {
     addNewContainer.addEventListener('click', function () {
         var paymentDataRow = document.querySelector(".payment-data-row");
         var selectWrapper = document.querySelector(".select-wrapper");
-        
+
 
         //Remove custom select container
         paymentDataRow.removeChild(selectWrapper);
@@ -500,7 +533,7 @@ function buildAddNewButton(method) {
         }
 
         applyCleaveToCardFields();
-    }); 
+    });
 
     return addNewContainer;
 }
@@ -527,7 +560,7 @@ function builBackToSavedValues(method) {
         paymentDataRow.appendChild(buildSelectSavedData(method.customFieldValue,
             paymentDataRow,
             method));
-    }); 
+    });
 
     return backContainer;
 }
@@ -560,13 +593,13 @@ function buildSelectLabel(key, value, input, parent, method) {
 
     //<p>value</p>
     var optionText = document.createElement("p");
-    if(method.customfield == "phone") {
+    if (method.customfield == "phone") {
         var phoneNumber = value.split(":");
         optionText.innerHTML = "(" + phoneNumber[0] + ") " + phoneNumber[1];
     } else {
         optionText.innerHTML = value;
     }
-    
+
     //<div class="delete-icon">
     var deleteWrapper = document.createElement("div");
     deleteWrapper.classList = "delete-icon";
@@ -727,7 +760,7 @@ function buildCustomField(method) {
     paymentFieldsContainer.appendChild(inputContainer);
 
     var hasSavedValues = Object.keys(method.customFieldValue).length > 0;
-    if(hasSavedValues) {
+    if (hasSavedValues) {
         paymentFieldsContainer.appendChild(builBackToSavedValues(method));
     }
 
