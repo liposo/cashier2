@@ -1,21 +1,21 @@
 window.addEventListener("load", function () {
-    var cards = document.querySelectorAll(".card");
-    var cashierFormSection = document.getElementById("cashierPaymentForm");
-    var methodContainer = document.getElementById("methodsContainer");
-    var form = document.getElementById("cashierForm");
+    let cards = document.querySelectorAll(".card");
+    let cashierFormSection = document.getElementById("cashierPaymentForm");
+    let methodContainer = document.getElementById("methodsContainer");
+    let form = document.getElementById("cashierForm");
 
     //Get and update geolocation if available 
-    var latitude = document.querySelector(".latitude");
-    var longitude = document.querySelector(".longitude");
+    let latitude = document.querySelector(".latitude");
+    let longitude = document.querySelector(".longitude");
     updateCoordinates(latitude, longitude);
 
-    for (var i = 0; i < cards.length; i++) {
+    for (let i = 0; i < cards.length; i++) {
         cards[i].addEventListener('click', function () {
-            var methodData = getMethodData(this);
+            let methodData = getMethodData(this);
             
             methodContainer.className = "scrolling-wrapper";
             
-            var currentMethod = document.querySelector('[id^="selected-"]');
+            let currentMethod = document.querySelector('[id^="selected-"]');
             if(currentMethod) {
                 form.removeChild(currentMethod);  
             }
@@ -23,7 +23,7 @@ window.addEventListener("load", function () {
             form.appendChild(buildPaymentFormFields(cards, cashierFormSection, methodData));
             form.classList.add("method-container");
 
-            for (var i = 0; i < cards.length; i++) {
+            for (let i = 0; i < cards.length; i++) {
                 cards[i].classList.add("card-small");
                 cards[i].style.display = 'flex';
             }
@@ -36,7 +36,7 @@ window.addEventListener("load", function () {
 
 function buildPaymentFormFields(cards, cashierFormSection, methodData) {
     //<div id="selectedMethod" class="form-wrapper">
-    var selectedMethod = document.createElement("div");
+    let selectedMethod = document.createElement("div");
     selectedMethod.className = "form-wrapper";
     selectedMethod.id = "selected-" + methodData.id;
 
@@ -44,11 +44,11 @@ function buildPaymentFormFields(cards, cashierFormSection, methodData) {
     selectedMethod.appendChild(buildLogoAmountRow(methodData));
 
     //<div class="payment-data-row">
-    var paymentDataRow = document.createElement("div");
-    paymentDataRow.classList = "payment-data-row";
+    let paymentDataRow = document.createElement("div");
+    paymentDataRow.className = "payment-data-row";
 
     //append custom field
-    var hasSavedValues = Object.keys(methodData.customFieldValue).length > 0;
+    let hasSavedValues = Object.keys(methodData.customFieldValue).length > 0;
     if (hasSavedValues) {
         paymentDataRow.appendChild(buildSelectSavedData(methodData.customFieldValue,
             paymentDataRow,
@@ -73,8 +73,8 @@ function buildPaymentFormFields(cards, cashierFormSection, methodData) {
     selectedMethod.appendChild(buildSubmitFormRow(methodData));
 
     // add hidden inputs
-    var iframe = window !== window.parent;
-    var domain;
+    let iframe = window !== window.parent;
+    let domain;
 
     if (iframe) {
         domain = document.location.ancestorOrigins[0].replace(/^https?\:\/\//i, "");
@@ -108,7 +108,7 @@ function buildPaymentFormFields(cards, cashierFormSection, methodData) {
 };
 
 function applyCleaveToCardFields() {
-    var cardPanField = document.querySelector(".cardPan");
+    let cardPanField = document.querySelector(".cardPan");
     if (cardPanField) {
         new Cleave('.cardPan', {
             creditCard: true,
@@ -119,7 +119,7 @@ function applyCleaveToCardFields() {
         });
     }
 
-    var cardExpiryDate = document.querySelector(".expiry-date");
+    let cardExpiryDate = document.querySelector(".expiry-date");
     if (cardExpiryDate) {
         new Cleave('.expiry-date', {
             date: true,
@@ -127,7 +127,7 @@ function applyCleaveToCardFields() {
         });
     }
 
-    var cardCvv = document.querySelector(".cvv");
+    let cardCvv = document.querySelector(".cvv");
     if (cardCvv) {
         new Cleave('.cvv', {
             numeral: true,
@@ -138,7 +138,7 @@ function applyCleaveToCardFields() {
 }
 
 function buildHiddenInput(name, className, value) {
-    var hiddenInput = document.createElement("input");
+    let hiddenInput = document.createElement("input");
     hiddenInput.type = "hidden";
     hiddenInput.name = name;
     if (className.length > 0) {
@@ -153,19 +153,19 @@ function buildHiddenInput(name, className, value) {
 
 function buildCheckbox(label) {
     //<label class="checkbox-container">
-    var checkboxContainer = document.createElement("label");
-    checkboxContainer.classList = "checkbox-container";
+    let checkboxContainer = document.createElement("label");
+    checkboxContainer.className = "checkbox-container";
     checkboxContainer.innerHTML = label;
 
     //<input type="checkbox" id="saveData">
-    var checkboxInput = document.createElement("input");
+    let checkboxInput = document.createElement("input");
     checkboxInput.type = "checkbox";
     checkboxInput.id = "saveData";
     checkboxInput.name = "saveData";
 
     //<span class="checkbox-mark">
-    var mark = document.createElement("span");
-    mark.classList = "checkbox-mark";
+    let mark = document.createElement("span");
+    mark.className = "checkbox-mark";
 
     checkboxContainer.appendChild(checkboxInput);
     checkboxContainer.appendChild(mark);
@@ -175,8 +175,8 @@ function buildCheckbox(label) {
 
 function buildLogoAmountRow(method) {
     //<div class="logo-amount-row">
-    var logoAmountRow = document.createElement("div");
-    logoAmountRow.classList = "logo-amount-row";
+    let logoAmountRow = document.createElement("div");
+    logoAmountRow.className = "logo-amount-row";
 
     logoAmountRow.appendChild(buildLogo(method));
     logoAmountRow.appendChild(buildAmount(method));
@@ -186,15 +186,15 @@ function buildLogoAmountRow(method) {
 
 function buildLogo(method) {
     //<div class="form-logo">
-    var divLogo = document.createElement("div");
-    divLogo.classList = "form-logo";
+    let divLogo = document.createElement("div");
+    divLogo.className = "form-logo";
 
     //<img src="img/bigwallet.svg">
-    var logo = document.createElement("img");
+    let logo = document.createElement("img");
     logo.src = method.logo;
 
     //<small>10 EUR - EUR</small>
-    var amountRangeText = document.createElement("small");
+    let amountRangeText = document.createElement("small");
     amountRangeText.innerHTML = method.amountrange;
 
     divLogo.appendChild(logo);
@@ -205,8 +205,8 @@ function buildLogo(method) {
 
 function buildAmount(method) {
     //<div class="amount-container">
-    var amountContainerDiv = document.createElement("div");
-    amountContainerDiv.classList = "amount-container";
+    let amountContainerDiv = document.createElement("div");
+    amountContainerDiv.className = "amount-container";
 
     if (method.predefinedamounts) {
         amountContainerDiv.appendChild(buildPredefinedAmounts(method));
@@ -224,16 +224,16 @@ function buildAmount(method) {
 
 function buildPredefinedAmounts(method) {
     //<div class="predefined-amount-row">
-    var predefinedAmountRowDiv = document.createElement("div");
-    predefinedAmountRowDiv.classList = "predefined-amount-row";
+    let predefinedAmountRowDiv = document.createElement("div");
+    predefinedAmountRowDiv.className = "predefined-amount-row";
 
     //<span>Amount: </span>
-    var amountLabel = document.createElement("label");
+    let amountLabel = document.createElement("label");
     amountLabel.innerHTML = method.labels.amount + ": ";
     predefinedAmountRowDiv.appendChild(amountLabel);
 
-    var predefinedAmounts = method.predefinedamounts.split(":");
-    for (var i = 0; i < predefinedAmounts.length; i++) {
+    let predefinedAmounts = method.predefinedamounts.split(":");
+    for (let i = 0; i < predefinedAmounts.length; i++) {
         predefinedAmountRowDiv.appendChild(buildPredefinedamountRadio(predefinedAmounts[i]));
     }
 
@@ -242,12 +242,12 @@ function buildPredefinedAmounts(method) {
 
 function buildPredefinedamountRadio(amount) {
     //<label class="radio-container">
-    var customRadio = document.createElement("label");
-    customRadio.classList = "radio-container";
+    let customRadio = document.createElement("label");
+    customRadio.className = "radio-container";
     customRadio.innerText = amount;
 
     //<input id="amount100" name="amount" type="radio" value="100" checked="checked">
-    var radioInput = document.createElement("input");
+    let radioInput = document.createElement("input");
     radioInput.id = "amount" + amount;
     radioInput.name = "cashier.amount";
     radioInput.type = "radio";
@@ -255,8 +255,8 @@ function buildPredefinedamountRadio(amount) {
     radioInput.required = true;
 
     //<span class="checkmark"></span>
-    var radioCheckmark = document.createElement("span");
-    radioCheckmark.classList = "checkmark";
+    let radioCheckmark = document.createElement("span");
+    radioCheckmark.className = "checkmark";
 
     customRadio.appendChild(radioInput);
     customRadio.appendChild(radioCheckmark);
@@ -266,15 +266,15 @@ function buildPredefinedamountRadio(amount) {
 
 function buildRadioManualAmount(method) {
     //<div class="manual-amount-row">
-    var manualAmountRow = document.createElement("div");
-    manualAmountRow.classList = "manual-amount-row";
+    let manualAmountRow = document.createElement("div");
+    manualAmountRow.className = "manual-amount-row";
 
     //<label class="radio-container radio-container-manual-amount">
-    var customRadioManualAmount = document.createElement("label");
-    customRadioManualAmount.classList = "radio-container radio-container-manual-amount";
+    let customRadioManualAmount = document.createElement("label");
+    customRadioManualAmount.className = "radio-container radio-container-manual-amount";
 
     //<input id="manualAmountRadio" name="amount" type="radio" value="">
-    var manualAmountRadio = document.createElement("input");
+    let manualAmountRadio = document.createElement("input");
     manualAmountRadio.id = "manualAmountRadio";
     manualAmountRadio.name = "cashier.amount";
     manualAmountRadio.type = "radio";
@@ -283,8 +283,8 @@ function buildRadioManualAmount(method) {
     manualAmountRadio.checked = true;
 
     //<span class="checkmark"></span>
-    var manualAmountCheckmark = document.createElement("span");
-    manualAmountCheckmark.classList = "checkmark";
+    let manualAmountCheckmark = document.createElement("span");
+    manualAmountCheckmark.className = "checkmark";
 
     customRadioManualAmount.appendChild(manualAmountRadio);
     customRadioManualAmount.appendChild(manualAmountCheckmark);
@@ -292,12 +292,12 @@ function buildRadioManualAmount(method) {
     manualAmountRow.appendChild(customRadioManualAmount);
 
     //<div class="manual-amount">
-    var manualAmount = document.createElement("div");
-    manualAmount.classList = "manual-amount";
+    let manualAmount = document.createElement("div");
+    manualAmount.className = "manual-amount";
 
     //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
-    var manualamountInput = document.createElement("input");
-    manualamountInput.classList = "text-input amount";
+    let manualamountInput = document.createElement("input");
+    manualamountInput.className = "text-input amount";
     manualamountInput.id = "manualAmountInput";
     manualamountInput.type = "text";
     manualamountInput.value = method.defaultamount;
@@ -321,7 +321,7 @@ function buildRadioManualAmount(method) {
     });
 
     //<p class="">Small text under the amount input</p>
-    var textUnderAmountInput = document.createElement("p");
+    let textUnderAmountInput = document.createElement("p");
     textUnderAmountInput.innerHTML = method.textUnderAmount;
 
     manualAmount.appendChild(manualamountInput);
@@ -334,8 +334,8 @@ function buildRadioManualAmount(method) {
 
 function buildErrorDiv(method) {
     //<div class="error">Amount out of range</div>   
-    var errorDiv = document.createElement("div");
-    errorDiv.classList = "error";
+    let errorDiv = document.createElement("div");
+    errorDiv.className = "error";
     errorDiv.innerHTML = method.error;
 
     return errorDiv;
@@ -343,26 +343,26 @@ function buildErrorDiv(method) {
 
 function buildManualAmount(method) {
     //<div class="amount-container">
-    var amountContainerDiv = document.createElement("div");
-    amountContainerDiv.classList = "amount-container";
+    let amountContainerDiv = document.createElement("div");
+    amountContainerDiv.className = "amount-container";
 
     //<div class="manual-amount-row">
-    var manualAmountRow = document.createElement("div");
-    manualAmountRow.classList = "manual-amount-row";
+    let manualAmountRow = document.createElement("div");
+    manualAmountRow.className = "manual-amount-row";
 
     //<div class="manual-amount">
-    var manualamount = document.createElement("div");
-    manualamount.classList = "manual-amount";
+    let manualamount = document.createElement("div");
+    manualamount.className = "manual-amount";
 
     //<span>Amount: </span>
-    var amountLabel = document.createElement("label");
+    let amountLabel = document.createElement("label");
     amountLabel.innerHTML = method.labels.amount;
-    amountLabel.classList = "input-label";
+    amountLabel.className = "input-label";
     amountLabel.htmlFor = "manualAmountInput";
 
     //<input class="text-input has-error" name="amount" id="manualAmountInput" type="text" placeholder="Amount" />
-    var manualamountInput = document.createElement("input");
-    manualamountInput.classList = "text-input amount";
+    let manualamountInput = document.createElement("input");
+    manualamountInput.className = "text-input amount";
     manualamountInput.id = "manualAmountInput";
     manualamountInput.name = "cashier.amount"
     manualamountInput.type = "text";
@@ -370,7 +370,7 @@ function buildManualAmount(method) {
     manualamountInput.placeholder = method.labels.amount;
 
     //<p class="">Small text under the amount input</p>
-    var textUnderAmountInput = document.createElement("p");
+    let textUnderAmountInput = document.createElement("p");
     textUnderAmountInput.innerHTML = method.textUnderAmount
     manualamount.appendChild(amountLabel);
     manualamount.appendChild(manualamountInput);
@@ -383,8 +383,8 @@ function buildManualAmount(method) {
 
 function buildFullCard(method) {
     //<div class="payment-data-fields-container">
-    var paymentFieldsContainer = document.createElement("div");
-    paymentFieldsContainer.classList = "payment-data-fields-container";
+    let paymentFieldsContainer = document.createElement("div");
+    paymentFieldsContainer.className = "payment-data-fields-container";
 
     paymentFieldsContainer.appendChild(buildFullCardInput("input-container",
         "card.number",
@@ -401,8 +401,8 @@ function buildFullCard(method) {
     ));
 
     //<div class="date-cvv">
-    var dateCvvRow = document.createElement("div");
-    dateCvvRow.classList = "date-cvv";
+    let dateCvvRow = document.createElement("div");
+    dateCvvRow.className = "date-cvv";
 
     dateCvvRow.appendChild(buildFullCardInput("small-input-wapper",
         "card.expiryDate",
@@ -423,7 +423,7 @@ function buildFullCard(method) {
     //Append save data checkbox
     paymentFieldsContainer.appendChild(buildCheckbox(method.labels.save));
 
-    var hasSavedValues = Object.keys(method.customFieldValue).length > 0;
+    let hasSavedValues = Object.keys(method.customFieldValue).length > 0;
     if (hasSavedValues) {
         paymentFieldsContainer.appendChild(builBackToSavedValues(method));
     }
@@ -433,21 +433,21 @@ function buildFullCard(method) {
 
 function buildSelectSavedData(savedValues, parent, method) {
     //<div class="selectWrapper">
-    var selectWrapper = document.createElement("div");
+    let selectWrapper = document.createElement("div");
     selectWrapper.className = "select-wrapper";
 
     //<div class="select mb-8em" tabindex="1">
-    var customSelect = document.createElement("div");
+    let customSelect = document.createElement("div");
     customSelect.className = "select";
     customSelect.tabIndex = 1;
     customSelect.id = "selector";
 
-    var lenght = Object.keys(savedValues).length;
-    for (var i = 0; i < lenght; i++) {
-        var key = Object.keys(savedValues)[i];
-        var value = Object.values(savedValues)[i];
+    let lenght = Object.keys(savedValues).length;
+    for (let i = 0; i < lenght; i++) {
+        let key = Object.keys(savedValues)[i];
+        let value = Object.values(savedValues)[i];
 
-        var selectOption = buildSelectorInput(key, value, i);
+        let selectOption = buildSelectorInput(key, value, i);
         customSelect.appendChild(selectOption);
         customSelect.appendChild(buildSelectLabel(key, value, selectOption, customSelect, method));
     }
@@ -455,14 +455,14 @@ function buildSelectSavedData(savedValues, parent, method) {
     if (method.customfield == "fullCard") {
         customSelect.classList.add("with-cvv");
 
-        var fieldsContainer = document.createElement("div");
+        let fieldsContainer = document.createElement("div");
         fieldsContainer.className = "select-cvv";
 
         //Label and custom select
-        var customSelectorContainer = document.createElement("div");
+        let customSelectorContainer = document.createElement("div");
         customSelectorContainer.className = "select-cvv-container";
 
-        var label = document.createElement("p");
+        let label = document.createElement("p");
         label.className = "input-label";
         label.innerHTML = method.labels.select;
 
@@ -490,24 +490,24 @@ function buildSelectSavedData(savedValues, parent, method) {
 
 function buildAddNewButton(method) {
     //<div class="add-new">
-    var addNewContainer = document.createElement("div");
-    addNewContainer.classList = "add-new";
+    let addNewContainer = document.createElement("div");
+    addNewContainer.className = "add-new";
 
     //<span>+</span>
-    var plusSign = document.createElement("span");
+    let plusSign = document.createElement("span");
     plusSign.innerHTML = "+";
 
     //<p class="text-new">Use different account number</p>
-    var addNewText = document.createElement("p");
+    let addNewText = document.createElement("p");
     addNewText.innerHTML = method.labels.addNew;
-    addNewText.classList = "text-new";
+    addNewText.className = "text-new";
 
     addNewContainer.appendChild(plusSign);
     addNewContainer.appendChild(addNewText);
 
     addNewContainer.addEventListener('click', function () {
-        var paymentDataRow = document.querySelector(".payment-data-row");
-        var selectWrapper = document.querySelector(".select-wrapper");
+        let paymentDataRow = document.querySelector(".payment-data-row");
+        let selectWrapper = document.querySelector(".select-wrapper");
 
 
         //Remove custom select container
@@ -534,19 +534,19 @@ function buildAddNewButton(method) {
 
 function builBackToSavedValues(method) {
     //<div class="back">
-    var backContainer = document.createElement("div");
-    backContainer.classList = "add-new";
+    let backContainer = document.createElement("div");
+    backContainer.className = "add-new";
 
     //<p class="text-new">Back</p>
-    var backText = document.createElement("p");
+    let backText = document.createElement("p");
     backText.innerHTML = method.labels.back;
-    backText.classList = "text-new";
+    backText.className = "text-new";
 
     backContainer.appendChild(backText);
 
     backContainer.addEventListener('click', function () {
-        var paymentDataRow = document.querySelector(".payment-data-row");
-        var paymentData = document.querySelector(".payment-data-fields-container");
+        let paymentDataRow = document.querySelector(".payment-data-row");
+        let paymentData = document.querySelector(".payment-data-fields-container");
 
         //Remove custom select container
         paymentDataRow.removeChild(paymentData);
@@ -561,11 +561,11 @@ function builBackToSavedValues(method) {
 
 function buildSelectorInput(key, value, position) {
     //<input class="options-select option-input" name="selectors" type="radio" id="opt1" checked>
-    var input = document.createElement("input");
+    let input = document.createElement("input");
     input.type = "radio";
     input.id = value;
     input.value = key;
-    input.classList = "options-select option-input";
+    input.className = "options-select option-input";
     input.name = "savedDataSelected";
     input.required = true;
     if (position == 0) {
@@ -577,29 +577,29 @@ function buildSelectorInput(key, value, position) {
 
 function buildSelectLabel(key, value, input, parent, method) {
     //<label for="opt1" class="option">
-    var optionLabel = document.createElement("label");
-    optionLabel.classList = "option";
+    let optionLabel = document.createElement("label");
+    optionLabel.className = "option";
     optionLabel.htmlFor = value;
 
     //<div class="option-content-container">
-    var option = document.createElement("div");
-    option.classList = "option-content-container";
+    let option = document.createElement("div");
+    option.className = "option-content-container";
 
     //<p>value</p>
-    var optionText = document.createElement("p");
+    let optionText = document.createElement("p");
     if (method.customfield == "phone") {
-        var phoneNumber = value.split(":");
+        let phoneNumber = value.split(":");
         optionText.innerHTML = "(" + phoneNumber[0] + ") " + phoneNumber[1];
     } else {
         optionText.innerHTML = value;
     }
 
     //<div class="delete-icon">
-    var deleteWrapper = document.createElement("div");
-    deleteWrapper.classList = "delete-icon";
+    let deleteWrapper = document.createElement("div");
+    deleteWrapper.className = "delete-icon";
 
     //<img src="img/delete-icon.svg" />
-    var deleteIcon = document.createElement("img");
+    let deleteIcon = document.createElement("img");
     deleteIcon.src = "img/delete-icon.svg";
 
     deleteWrapper.appendChild(deleteIcon);
@@ -615,18 +615,18 @@ function buildSelectLabel(key, value, input, parent, method) {
         parent.removeChild(optionLabel);
 
         //remove value from savedValues
-        var selectedMethodSavedValues = method.customFieldValue;
+        let selectedMethodSavedValues = method.customFieldValue;
         delete selectedMethodSavedValues[key];
 
         //re-write data-attribute with removed value
-        var selectedMethod = document.getElementById(method.id);
+        let selectedMethod = document.getElementById(method.id);
         selectedMethod.setAttribute("data-customfieldvalue", JSON.stringify(selectedMethodSavedValues));
 
-        var inputs = parent.querySelectorAll("input")
+        let inputs = parent.querySelectorAll("input")
         if (inputs.length != 0) {
             inputs[0].checked = true;
         } else {
-            var paymentDataRow = document.querySelector(".payment-data-row");
+            let paymentDataRow = document.querySelector(".payment-data-row");
 
             //Remove custom select container
             paymentDataRow.removeChild(parent.parentElement);
@@ -652,21 +652,21 @@ function buildSelectLabel(key, value, input, parent, method) {
 
 function buildFullCardInput(containerClass, inputName, inputClass, label, placeholder) {
     //<div class="input-container">
-    var inputContainer = document.createElement("div");
-    inputContainer.classList = containerClass;
+    let inputContainer = document.createElement("div");
+    inputContainer.className = containerClass;
 
     //<label for="card.number" class="input-label">Card number</label>
-    var inputLabel = document.createElement("label");
+    let inputLabel = document.createElement("label");
     inputLabel.htmlFor = inputName;
-    inputLabel.classList = "input-label";
+    inputLabel.className = "input-label";
     inputLabel.innerHTML = label;
 
     //<input id="card.number" name="card.number" class="text-input has-error" type="text" placeholder="Card Number" />
-    var input = document.createElement("input");
+    let input = document.createElement("input");
     input.type = "text";
     input.id = inputName;
     input.name = inputName;
-    input.classList = "text-input " + inputClass;
+    input.className = "text-input " + inputClass;
     input.placeholder = placeholder;
     input.required = true;
     input.autocomplete = "none";
@@ -686,40 +686,40 @@ function buildFullCardInput(containerClass, inputName, inputClass, label, placeh
 
 function buildCustomField(method) {
     //<div class="payment-data-fields-container">
-    var paymentFieldsContainer = document.createElement("div");
-    paymentFieldsContainer.classList = "payment-data-fields-container";
+    let paymentFieldsContainer = document.createElement("div");
+    paymentFieldsContainer.className = "payment-data-fields-container";
 
     //<div class="input-container">
-    var inputContainer = document.createElement("div");
-    inputContainer.classList = "input-container";
+    let inputContainer = document.createElement("div");
+    inputContainer.className = "input-container";
 
     if (method.customfield == "phone") {
         //<label for="cashier.customInput" class="input-label">Phone Number</label>
-        var inputLabel = document.createElement("label");
+        let inputLabel = document.createElement("label");
         inputLabel.htmlFor = "cahier." + method.customfield;
-        inputLabel.classList = "input-label"
+        inputLabel.className = "input-label"
         inputLabel.innerHTML = method.customfieldlabel;
 
         //<div class="phone-wrapper">
-        var phoneWrapper = document.createElement("div");
-        phoneWrapper.classList = "phone-wrapper";
+        let phoneWrapper = document.createElement("div");
+        phoneWrapper.className = "phone-wrapper";
 
         //<input id="cashier.phoneCountryCode" name="cashier.phoneCountryCode" class="text-input phone-code" type="tel" />
-        var countryCodeInput = document.createElement("input");
+        let countryCodeInput = document.createElement("input");
         countryCodeInput.type = ("tel");
         countryCodeInput.id = "cahier.phoneCountryCode";
         countryCodeInput.name = "cahier.phoneCountryCode";
-        countryCodeInput.classList = "text-input phone-code"
+        countryCodeInput.className = "text-input phone-code"
         countryCodeInput.placeholder = method.labels.countryCode != undefined ? method.labels.countryCode : "Code";
         countryCodeInput.required = true;
         countryCodeInput.maxLength = 5;
 
         //<input id="cashier.phone" name="cashier.number" class="text-input phone" type="tel" placeholder="" />
-        var phoneInput = document.createElement("input");
+        let phoneInput = document.createElement("input");
         phoneInput.type = ("tel");
         phoneInput.id = "cahier." + method.customfield;
         phoneInput.name = "cahier." + method.customfield;
-        phoneInput.classList = "text-input " + method.customfield;
+        phoneInput.className = "text-input " + method.customfield;
         phoneInput.placeholder = method.customfieldplaceholder;
         phoneInput.required = true;
 
@@ -731,17 +731,17 @@ function buildCustomField(method) {
         inputContainer.appendChild(phoneWrapper);
     } else {
         //<label for="cashier.customInput" class="input-label">Account Id</label>
-        var inputLabel = document.createElement("label");
+        let inputLabel = document.createElement("label");
         inputLabel.htmlFor = "cahier." + method.customfield;
-        inputLabel.classList = "input-label"
+        inputLabel.className = "input-label"
         inputLabel.innerHTML = method.customfieldlabel;
 
         //<input id="cashier.customInput" name="cashier.customInput" class="text-input has-error" type="text" placeholder="" />
-        var input = document.createElement("input");
+        let input = document.createElement("input");
         input.type = ("text");
         input.id = "cahier." + method.customfield;
         input.name = "cahier." + method.customfield;
-        input.classList = "text-input " + method.customfield;
+        input.className = "text-input " + method.customfield;
         input.placeholder = method.customfieldplaceholder;
         input.pattern = method.customfieldregex;
         input.required = true;
@@ -753,7 +753,7 @@ function buildCustomField(method) {
 
     paymentFieldsContainer.appendChild(inputContainer);
 
-    var hasSavedValues = Object.keys(method.customFieldValue).length > 0;
+    let hasSavedValues = Object.keys(method.customFieldValue).length > 0;
     if (hasSavedValues) {
         paymentFieldsContainer.appendChild(builBackToSavedValues(method));
     }
@@ -763,22 +763,22 @@ function buildCustomField(method) {
 
 function buildSubmitFormRow(method) {
     //<div class="submit-row">
-    var submitRow = document.createElement("div");
-    submitRow.classList = "submit-row";
+    let submitRow = document.createElement("div");
+    submitRow.className = "submit-row";
 
     //<div class="submit-container">
-    var submitContainer = document.createElement("div");
-    submitContainer.classList = "submit-container";
+    let submitContainer = document.createElement("div");
+    submitContainer.className = "submit-container";
 
     //<button class="submit-button mb-8em">Submit</button>
-    var button = document.createElement("button");
+    let button = document.createElement("button");
     button.id = "cashierFormSubmit"
-    button.classList = "submit-button mb-8em";
+    button.className = "submit-button mb-8em";
     button.innerText = method.labels.submit;
     submitContainer.appendChild(button);
 
     //<a class="cancel-link mb-8em" href="#">Cancel</a>
-    // var cancelLink = document.createElement("a");
+    // let cancelLink = document.createElement("a");
     // cancelLink.classList = "cancel-link mb-8em"
     // cancelLink.innerText = method.labels.cancel;
     // cancelLink.href = method.cancel;
@@ -786,22 +786,22 @@ function buildSubmitFormRow(method) {
 
     if (method.customfield === "fullCard") {
         //<div class="cards-brands mb-8em">
-        var cardLogos = document.createElement("div");
-        cardLogos.classList = "cards-brands mb-8em";
+        let cardLogos = document.createElement("div");
+        cardLogos.className = "cards-brands mb-8em";
 
         //<img src="img/cc-images.svg" />
-        var cardLogosImg = document.createElement("img");
+        let cardLogosImg = document.createElement("img");
         cardLogosImg.src = "img/cc-images.svg";
         cardLogos.appendChild(cardLogosImg);
         submitContainer.appendChild(cardLogos);
 
         //<div class="pci-logo-wrapper mb-8em">
-        var pciLogo = document.createElement("div");
-        pciLogo.classList = "pci-logo-wrapper mb-8em";
+        let pciLogo = document.createElement("div");
+        pciLogo.className = "pci-logo-wrapper mb-8em";
 
         //<img class="pci-logo" src="img/pci-dss-logo.svg" />
-        var pciLogoImg = document.createElement("img");
-        pciLogoImg.classList = "pci-logo";
+        let pciLogoImg = document.createElement("img");
+        pciLogoImg.className = "pci-logo";
         pciLogoImg.src = "img/pci-dss-logo.svg";
         pciLogo.appendChild(pciLogoImg);
 
@@ -847,16 +847,16 @@ function getMethodData(method) {
 }
 
 function isCardValid(element) {
-    var value = element.value;
+    let value = element.value;
 
     if (/[^0-9-\s]+/.test(value)) return false;
-    var check = 0;
-    var even = false;
+    let check = 0;
+    let even = false;
     value = value.replace(/\D/g, "");
 
-    for (var n = value.length - 1; n >= 0; n--) {
-        var digitAtN = value.charAt(n);
-        var digitAsInt = parseInt(digitAtN, 10);
+    for (let n = value.length - 1; n >= 0; n--) {
+        let digitAtN = value.charAt(n);
+        let digitAsInt = parseInt(digitAtN, 10);
 
         if (even) {
             if ((digitAsInt *= 2) > 9) digitAsInt -= 9;
